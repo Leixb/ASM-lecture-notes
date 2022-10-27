@@ -1,0 +1,38 @@
+%! TEX root = **/000-main.tex
+
+\section{Bayesian Inference}
+
+\subsection{Posterior distribution as an estimator}
+
+The posterior distribution is a compromise between the prior
+distribution (the information before observing the data) and the
+likelihood function (the data information).
+
+The posterior distribution $\pi(\theta \mid y)$ is the natural
+Bayesian estimator for $\theta$ given the data $y$.
+
+\subsection{Point Estimation}
+Any measure of the location of $\pi(\theta \mid y)$ will serve as a point
+estimate:
+\begin{align*}
+    \hat{\theta}_{pe} &= E(\theta \mid y) = \int \theta \pi(\theta \mid y) \partial\theta \\
+    \hat{\theta}_{pme} &\text{ is such that } \int_{-\infty}^{\hat{\theta}_{pme}} \pi(\theta \mid y) \partial\theta = \frac{1}{2} \\
+    \hat{\theta}_{pmo} &= \argmax_{\theta} \pi(\theta \mid y) \\
+\end{align*}
+
+This can also be computed numerically by simulation. Let $\theta^{(1)}, \dots , \theta^{(M)}$ be
+simulations of $\theta$ from $\pi(\theta \mid y)$, then:
+\begin{equation}
+    \hat{\theta}_{pe} = \frac{1}{M} \sum_{i=1}^M \theta^{(i)}
+\end{equation}
+
+\paragraph{Observation} We can also define a prior point estimator using the prior distribution
+instead of the posterior distribution.
+
+\subsection{Interval Estimation}
+A posterior credibility (or probability) interval of $p$ for $\theta$, $IC_p$ is
+any region of $\Omega$ such that:
+\begin{equation}
+    p(\theta \in IC_p \mid y) = \int_{IC_p} \pi(\theta \mid y) \partial\theta = p
+\end{equation}
+Usually we use intervals based on percentiles.

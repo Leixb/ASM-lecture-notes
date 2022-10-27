@@ -1,0 +1,127 @@
+%! TEX root = **/000-main.tex
+% vim: spell spelllang=en:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PREAMBLE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{001-preamble}
+\synctex=1
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% EXTRA PACKAGES / CONFIG
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Set default figure size
+\setkeys{Gin}{width=.9\textwidth, keepaspectratio}
+
+% Center figures by default
+\makeatletter
+\g@addto@macro\@floatboxreset\centering
+\makeatother
+
+\usepackage[normalem]{ulem}
+\usepackage{dsfont}
+\usepackage{tikz}
+% \usepackage{tikzexternal}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\usetikzlibrary{shapes,arrows,positioning,calc}
+
+\usepackage{cancel}
+\usepackage{mathrsfs}
+
+\DeclareMathOperator{\argmin}{argmin}
+\DeclareMathOperator{\argmax}{argmax}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{most}
+
+\theoremstyle{plain}% from `amsthm'
+\newtheorem{lemma}{Lemma}% from `amsthm'
+% \newtheorem{prop}{Proposition}% from `amsthm'
+
+\theoremstyle{definition}% from `amsthm'
+\newtheorem{defn}{Definition}% from `amsthm'
+
+\theoremstyle{remark}% from `amsthm'
+\newtheorem*{rem}{Remark}% from `amsthm'
+\newtheorem{ex}{Example}% from `amsthm'
+\newtheorem{prob}{Problem}% from `amsthm'
+\newtheorem{ques}{Question}% from `amsthm'
+\newtheorem*{note}{Note}% from `amsthm'
+\newtheorem*{hint}{Hint}% from `amsthm'
+
+\newtcbtheorem[number within=section]{definition}{Definition}%
+{colback=orange!5,colframe=yellow!35!black,fonttitle=\bfseries,parbox=false}{def}
+
+\newtcbtheorem[number within=section]{theorem}{Theorem}%
+{colback=yellow!5,colframe=lime!35!black,fonttitle=\bfseries,parbox=false}{th}
+
+\newtcbtheorem[number within=section]{prop}{Proposition}%
+{colback=cyan!5,colframe=cyan!35!black,fonttitle=\bfseries}{prop}
+
+\newtcbtheorem[number within=section]{recap}{Recap}%
+{colback=red!5,colframe=red!55!black,fonttitle=\bfseries}{rec}
+
+\newtcbtheorem[number within=section]{exercise}{Exercise}%
+{colback=purple!5,colframe=purple!35!black,fonttitle=\bfseries}{rec}
+
+\newtcbtheorem[number within=section]{question}{Question}%
+{colback=purple!5,colframe=green!35!black,fonttitle=\bfseries}{rec}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% METADATA
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% remove when using \maketitle:
+\renewcommand\and{\\[\baselineskip]}
+
+\title{\Huge Advance Statistical Modeling\\ \Large Lecture Notes}
+\author{Aleix Boné}
+\date{\today}
+
+% \makeindex
+
+\begin{document}
+\newcommand{\iemph}[1]{\index{#1}\emph{#1}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TITLE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Default title or use titlepage.tex
+
+%\maketitle
+\include{005-titlepage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TOC & lists
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\pagenumbering{Roman}
+
+%\setcounter{tocdepth}{2}
+\tableofcontents \pagebreak
+
+\listoffigures \listoftables \clearpage
+
+\pagenumbering{arabic}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTIONS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Paragraph spacing (placed after ToC)
+\setlength{\parskip}{1em plus 0.5em minus 0.2em}
+%\setlength{\parindent}{0pt}
+
+% Theory
+\include{010-bayes}
+\include{020-bayesian-inference}
+
+% \nocite{*}
+
+% \printindex\pagebreak
+% \printbibliography
+
+\end{document}

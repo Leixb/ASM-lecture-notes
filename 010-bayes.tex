@@ -1,0 +1,311 @@
+%! TEX root = **/000-main.tex
+
+\section{Bayesian Model}
+
+\begin{theorem}{Bayes Theorem}{bayes}
+	\begin{align}
+		P(A \mid B) & = \frac{P(B \mid A)P(A)}{P(B)}                             \\
+		P(A \mid B) & = \frac{P(B \mid A)P(A)}{\sum_{i=1}^n P(B \mid A_i)P(A_i)}
+	\end{align}
+\end{theorem}
+
+\begin{definition}{Statistical Model}{}
+	A \iemph{Statistical Model} $M$ is a list of Probability models $P$ indexed by
+	a parameter $\theta$ (which can be a scalar, vector, matrix, etc.) that
+	we know belongs to a \iemph{parameter space} $\Omega$.
+	\\[1em]
+	Formally:
+	\begin{align}
+		M = \{ P(\tilde{y}\mid\theta), \; \theta \in \Omega \}
+	\end{align}
+\end{definition}
+
+Given a Statistical Model and a Data set $\tilde{y}$, we want to find
+which probability model $P(\tilde{y}\mid\theta^*)$ is the most likely to
+have generated the data $\tilde{y}$. Where $\theta^* \in \Omega$ is the true
+value of the parameter.
+
+\subsection{The four problems of Statistics}
+\subsubsection{Data Collection}
+Design how to collect the data.
+
+This leads to choose the statistical model from which you will observe the data.
+The statistical model will be determined by the nature of the data
+(discrete or continuous) and by the type of sampling.
+
+\subsubsection{Model Validation}
+
+After choosing the model and collecting the data, we need to decide if
+the model is valid or not.
+
+That is, we have to decide if the probability model that generated the data
+belongs to $M$ and therefore the model is correct.
+
+\subsubsection{Statistical Inference}
+
+After collecting the data and checking the model, Statistical Inference
+tries to guess the true value of the parameter $\theta^*$. That is, it tries
+to guess the probability model that generated the data.
+
+It mainly consists of:
+\begin{enumerate}
+	\item Point estimation: Guessing the value of the parameter $\theta^*$.
+	\item Interval estimation: Guessing the interval of values of the parameter $\theta^*$.
+	\item Hypothesis testing: Guessing if the parameter $\theta^*$ belongs to a given set.
+	\item Prediction: Guessing the value of a new data point.
+\end{enumerate}
+
+\subsubsection{Results Presentation}
+
+Finally, the results must be interpreted and displayed in an understandable way
+according to the target audience.
+
+\subsection{Bayesian Model}
+
+\begin{definition}{Bayesian model}{}{}
+	A \iemph{Bayesian Model} is a Statistical Model where $\theta$ is a random variable
+	where the probability of $\theta$ is given by a prior distribution $\pi(\theta)$,
+	before looking at the data (it captures prior knowledge about $\theta$).
+
+	We call $\pi(\theta)$ the \iemph{prior distribution}.
+
+	A \emph{Bayesian Model} is a list of probability distributions sorted from most
+	likely to least likely according to the prior distribution $\pi(\theta)$:
+	\begin{equation}
+		M_B = \{ p(\tilde{y}\mid\theta), \; \theta \sim \pi(\theta), \; \theta \in \Omega \}
+	\end{equation}
+\end{definition}
+
+\begin{definition}{Likelihood function}{}{}
+	All the information that the data $y$ has about the parameter $\theta$ is in the
+	\iemph{likelihood function} $L_y(\theta)$.
+
+	The likelihood function is a function proportional to the probability distribution
+	of $\tilde{y},\; p(\tilde{y}\mid\theta)$, evaluated at the data $p(y \mid \theta)$
+	and expressed as a function of $\theta$:
+	\begin{equation}
+		L_y(\theta) \propto p(y \mid \theta)
+	\end{equation}
+\end{definition}
+
+The likelihood function sorts the parameter space $\Omega$ from most likely to least,
+so if $L_y(\theta_1) > L_y(\theta_2)$ it means that according to the data $y$,
+the parameter $\theta_1$ is more likely than $\theta_2$.
+
+\begin{definition}{Standarized Likelihood function}{}{}
+	It's the likelihood function divided by its integral over the parameter space $\Omega$,
+	so that it integrates to 1 and it's a probability distribution:
+	\begin{equation}
+		\tilde{L}_y^{std}(\theta) = \frac{L_y(\theta)}{\int_{\Omega} L_y(\theta) d\theta}
+	\end{equation}
+\end{definition}
+
+
+\begin{recap}{}{}{}
+	A Statistical model $M$ is a (not sorted) list of probability models, one for
+	each value of the parameter $\theta \in \Omega$:
+	\begin{equation*}
+		M = \{ p(\tilde{y}\mid\theta), \; \theta \in \Omega \}
+	\end{equation*}
+
+	\begin{itemize}
+		\item The \emph{prior distribution} $\pi(\theta)$ sorts the probability models of $M$
+		      using \emph{prior information} about the parameter $\theta$.
+		\item The \emph{likelihood function} $L_y(\theta)$ sorts the probability models of $M$
+		      using the \emph{data information} $y$.
+	\end{itemize}
+\end{recap}
+
+\subsection{Posterior Distribution}
+
+\begin{definition}{Posterior Distribution}{}{}
+	The posterior distribution $\pi(\theta \mid y)$ shows the information we have
+	about the parameter $\theta$ after looking at the data $y$.
+
+	It is calculated using Bayes Theorem \ref{th:bayes}:
+	\begin{equation}
+		\pi(\theta \mid y) = \frac{p(y,\,\theta)}{p(y)} = \frac{p(y \mid \theta) \pi(\theta)}{p(y)}
+	\end{equation}
+
+	Where $p(y)$ is the \iemph{marginal distribution} of $\tilde{y}$ evaluated at the
+	data $y$, which we will also call the \iemph{prior predictive distribution} evaluated at
+	the data:
+	\begin{equation}
+		p(\tilde y = y) = p(y) = \int_{\Omega} p(y,\,\theta) d\theta = \int_{\Omega} p(y \mid \theta) \pi(\theta) d\theta
+	\end{equation}
+
+	\begin{note}
+		$p(y)$ is a constant, also called the \iemph{normalization constant}, which
+		makes the posterior distribution integrate to 1.
+	\end{note}
+
+	From this it follows that the posterior distribution is proportional to the
+	\emph{product} of the \emph{prior distribution} $\pi(\theta)$ and the
+	\emph{likelihood function} $L_y(\theta)$:
+	\begin{equation}
+		\pi(\theta \mid y) \propto \pi(\theta) L_y(\theta)
+	\end{equation}
+\end{definition}
+
+\begin{note}
+	If $\pi(\theta)$ is a uniform distribution, the posterior distribution is the
+	standardized likelihood function $L_y^{std}(\theta)$.
+\end{note}
+
+\begin{recap}{}{}
+	\centering
+	\begin{tikzpicture}[every node/.style={rectangle,draw}]
+		\node[align=center] (model) {%
+			Bayesian model\\[1em]
+			$\begin{aligned}
+					\tilde y \mid \theta & \sim p(\tilde y \mid \theta) \\
+					\theta               & \sim \pi(\theta)
+				\end{aligned}$};
+
+		\node[below=of model] (bayes) {Bayes' theorem};
+		\node (data) [left=of bayes] {Data $y$};
+
+		\node[below=of bayes,align=center] (updated) {%
+			Bayesian model (updated)\\[1em]
+			$\begin{aligned}
+					\tilde y \mid \theta & \sim p(\tilde y \mid \theta) \\
+					\theta \mid y        & \sim \pi(\theta \mid y)
+				\end{aligned}$};
+
+		\node[right=of updated,align=center,draw=none] (post) {Posterior distribution \\[1em]
+			$ \pi(\theta \mid y) = \frac{L_y(\theta) \pi(\theta)}{\int L_y(\theta)\pi(\theta)d\theta} $};
+
+		\draw[->,line width=5pt] (model) -- (bayes) -- (updated);
+		\draw[->,line width=5pt] (data) -- (bayes);
+		\draw[->,line width=3pt,dashed] (updated.345) -- (post);
+	\end{tikzpicture}
+\end{recap}
+
+\subsection{Prior and posterior predictive distributions}
+
+\begin{definition}{Prior predictive distribution}{}
+	The \iemph{marginal distribution} of $\tilde{y}$, called the \iemph{prior predictive distribution},
+	represents our knowledge and uncertainty about the sample space $\tilde{y}$ before looking at the data $y$:
+	\begin{equation}
+		p(\tilde y) = \int_{\Omega} p(\tilde y ,\, \theta) d\theta = \int_{\Omega} p(\tilde y \mid \theta) \pi(\theta) d\theta
+	\end{equation}
+
+	\paragraph{Observations}
+	\begin{itemize}
+		\item $p(\tilde y) = E_{\pi(\theta)}[p(\tilde y \mid \theta)]$ is a weighted average of the
+		      probability models of $M$ where the weights are determined by the prior distribution $\pi(\theta)$.
+		\item $p(\tilde y)$ is a probability distribution that allows us to make predictions before
+		      observing the data.
+	\end{itemize}
+\end{definition}
+
+If we know something about the parameters, it means that we have some prior information about the data
+and vice versa. The prior predictive distribution translates the information about the
+parameter space into the sample space.
+
+The prior's parameters can be chosen in two ways:
+\begin{itemize}
+	\item Prior distribution $\pi(\theta)$ if the information we have is about the parameter space.
+	\item Prior predictive distribution $p(\tilde y)$ if the information we have is about the sample space.
+\end{itemize}
+
+\begin{definition}{Posterior predictive distribution}{}
+	Once the data $y$ is observed, we update the model to reflect the new information,
+	changing the prior distribution $\pi(\theta)$ into the posterior distribution $\pi(\theta \mid y)$.
+	Which means that the prior predictive distribution $p(\tilde y)$ is replaced by the
+	\iemph{posterior predictive distribution} $p(\tilde y \mid y)$:
+	\begin{equation}
+		p(\tilde y \mid y) = \int_{\Omega} p(\tilde y \mid \theta) \pi(\theta \mid y) d\theta
+	\end{equation}
+
+	\paragraph{Observations}
+	\begin{itemize}
+        \item $\pi(\theta y \mid y)$ shows everything we know about the parameter.
+        \item $p(\tilde y \mid y)$ shows everything we know about the data behavior.
+	\end{itemize}
+\end{definition}
+
+Predictive distributions can be calculated in two ways:
+\begin{itemize}
+    \item Analytically: solving integrals:
+        \begin{align*}
+            p(\tilde y) &= \int_{\Omega} p(\tilde y \mid \theta) \pi(\theta) d\theta \\
+            p(\tilde y \mid y) &= \int_{\Omega} p(\tilde y \mid \theta) \pi(\theta \mid y) d\theta
+        \end{align*}
+    \item Numerically (by simulation): sampling from the posterior distribution:
+        \begin{enumerate}
+            \item Decide on a number of simulations $M$ (the larger the better).
+            \item Sample $\theta^{(j)}$ from $\pi(\theta \mid y)$.
+            \item Sample $\tilde y^{(j)}$ from $p(\tilde y \mid \theta^{(j)})$.
+            \item Repeat $j=1,\ldots,M$.
+        \end{enumerate}
+        These values $\tilde y^{(j)}$ can be used to calculate everything we want to know:
+        mean, variance, quantiles, shape of the distribution, etc.
+\end{itemize}
+
+\begin{recap}{}{}
+	\centering
+	\begin{tikzpicture}[every node/.style={rectangle,draw}]
+		\node[align=center] (model) {%
+			Bayesian model\\[1em]
+			$\begin{aligned}
+					\tilde y \mid \theta & \sim p(\tilde y \mid \theta) \\
+					\theta               & \sim \pi(\theta)
+				\end{aligned}$};
+
+		\node[below=of model] (bayes) {Bayes' theorem};
+		\node (data) [left=of bayes] {Data $y$};
+
+		\node[below=of bayes,align=center] (updated) {%
+			Bayesian model (updated)\\[1em]
+			$\begin{aligned}
+					\tilde y \mid \theta & \sim p(\tilde y \mid \theta) \\
+					\theta \mid y        & \sim \pi(\theta \mid y)
+				\end{aligned}$};
+
+		\node[right=of model,draw=none] (prior) {
+                $p(\tilde y)$ (prior predictive dist.)
+            };
+		\node[right=of updated,draw=none] (post) {
+                $p(\tilde y \mid y)$ (posterior predictive dist.)
+            };
+
+		\draw[->,line width=5pt] (model) -- (bayes) -- (updated);
+		\draw[->,line width=5pt] (data) -- (bayes);
+		\draw[->,line width=3pt,dashed] (model) -- (prior);
+		\draw[->,line width=3pt,dashed] (updated) -- (post);
+	\end{tikzpicture}
+\end{recap}
+
+\subsection{Choosing the prior}
+
+The prior distribution $\pi(\theta)$ is a subjective choice. It should be based on previous
+studies and subjective knowledge of experts. In case of not having information or
+not being able to agree on the knowledge of experts, we will use a \iemph{non-informative prior}.
+
+\begin{definition}{Conjugate prior}{}
+    A prior distribution $\pi(\theta)$ is the \iemph{conjugate} prior of a statistical model
+    if the posterior distribution $\pi(\theta \mid y)$ is of the same family as the prior.
+
+    \begin{ex}
+        \begin{center}
+        \begin{tabular}{ccc}
+            \toprule
+            Model & Prior & Posterior \\
+            \midrule
+            Binomial($n,\theta$) & Beta($\alpha,\beta$) & Beta($\alpha + y,\beta + n - y$) \\
+            Poisson($\lambda$) & Gamma($\alpha,\beta$) & Gamma($\alpha + y,\beta + 1$) \\
+            \bottomrule
+        \end{tabular}
+    \end{center}
+    \end{ex}
+
+\end{definition}
+
+\paragraph{Informative priors}
+To chose informative priors, we can either do trial and error, drawing
+$\pi(\theta)$ or solving a system of equations based on moments and or quantiles.
+
+\paragraph{Non-informative priors}
+The most common are a flat prior (Laplace's prior) and a conjugate prior with
+\emph{huge} variance (e.g. Gamma($\alpha=0.001,\beta=0.001$)).
