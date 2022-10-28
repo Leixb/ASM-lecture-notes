@@ -19,12 +19,33 @@
 \g@addto@macro\@floatboxreset\centering
 \makeatother
 
-\usepackage[normalem]{ulem}
+\usepackage{ulem}
 \usepackage{dsfont}
 \usepackage{tikz}
 % \usepackage{tikzexternal}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
+
+\tikzset{declare function = {
+    binom(\k,\n,\p)=\n!/(\k!*(\n-\k)!)*\p^\k*(1-\p)^(\n-\k);
+    normal(\x,\mu,\sigma)=\frac{1}{\sqrt{2*\pi*\sigma^2}}*\exp(-\frac{(\x-\mu)^2}{2*\sigma^2});
+}}
+
+\newcommand*\GnuplotDefs{
+    % set number of samples
+    set samples 101;
+    %
+    % define beta distribution function
+    % (copied from <http://gnuplot.sourceforge.net/demo/prob.5.gnu>)
+    Binv(p,q)=exp(lgamma(p+q)-lgamma(p)-lgamma(q));
+    beta(x,p,q)=p<=0||q<=0?1/0:x<0||x>1?0.0:Binv(p,q)*x**(p-1.0)*(1.0-x)**(q-1.0);
+    gammaPdf(x,a,b)=b**a*x**(a-1)*exp(-b*x)/gamma(a);
+}
+
+\newenvironment{nscenter}
+ {\parskip=0pt\par\nopagebreak\centering}
+ {\par\noindent\ignorespacesafterend}
+
 
 \usetikzlibrary{shapes,arrows,positioning,calc}
 
@@ -70,6 +91,9 @@
 \newtcbtheorem[number within=section]{question}{Question}%
 {colback=purple!5,colframe=green!35!black,fonttitle=\bfseries}{rec}
 
+\newtcbtheorem[number within=section]{example}{Example}%
+{colback=white,colframe=white!35!black,fonttitle=\bfseries,parbox=false}{ex}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % METADATA
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -81,7 +105,7 @@
 \author{Aleix Boné}
 \date{\today}
 
-% \makeindex
+\makeindex
 
 \begin{document}
 \newcommand{\iemph}[1]{\index{#1}\emph{#1}}
@@ -101,8 +125,7 @@
 \pagenumbering{Roman}
 
 %\setcounter{tocdepth}{2}
-\tableofcontents \pagebreak
-
+\tableofcontents \vfill
 \listoffigures \listoftables \clearpage
 
 \pagenumbering{arabic}
@@ -115,13 +138,19 @@
 \setlength{\parskip}{1em plus 0.5em minus 0.2em}
 %\setlength{\parindent}{0pt}
 
+% \selectcolormodel{gray}
+
 % Theory
 \include{010-bayes}
 \include{020-bayesian-inference}
+\include{030-bayesian-computation}
+\include{040-hierarchical-models}
+\include{050-model-checking}
 
 % \nocite{*}
 
-% \printindex\pagebreak
-% \printbibliography
+\printindex
+\vfill
+\printbibliography
 
 \end{document}

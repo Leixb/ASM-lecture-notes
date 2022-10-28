@@ -1,0 +1,49 @@
+%! TEX root = **/000-main.tex
+
+\section{Model Checking}
+
+A model will be valid if it is able to generate data like the one we have observed.
+
+The Bayesian model is a ``data simulator'' as it uses the prior distribution to generate data.
+
+\paragraph{Steps}
+\begin{enumerate}
+    \item Chose a statistic(s)
+    \item Compute its reference distribution under the model
+    \item Compare the statistic with the reference distribution
+\end{enumerate}
+
+\subsection{Choosing a statistic}
+
+Can be numeric $T(y=(y_1,\, y_2,\, \dots,\, y_n))$ or graphical and should summarize the data and focus
+on the relevant aspects to our objective.
+
+\subsection{Computing the reference distribution of the statistic under the model}
+
+Using the posterior distribution, we will simulate values of the statistic to approximate
+the reference distribution:
+
+\begin{align*}
+    \span \text{We will simulate replicas of the observed data set:} \\
+    y^{rep} = (y_1^{rep},\, y_2^{rep},\, \dots,\, y_n^{rep}) \quad \text{for} \quad rep = 1,\, 2,\, \dots,\, M \\
+    \span \text{For each replica we will calculate the statistic} \\
+    T(y^{rep}) = T(y_1^{rep},\, y_2^{rep},\, \dots,\, y_n^{rep}) \\
+    \span \text{These values will allow us to approximate the reference distribution} \\
+    p(T(\tilde y) \mid y)
+\end{align*}
+
+If our objective is to make a prediction, a common way to validate the model is:
+\begin{enumerate}
+    \item Extract a subset of data
+    \item Implement the model without the extracted data
+    \item Compare the predictions the model makes with this extracted data.
+        For example, whether the prediction intervals contain the observed data.
+\end{enumerate}
+
+\begin{definition}{Model Construction}{}
+    The iterative process of proposing a model, validating it, identifying its limitations and
+    perhaps proposing a new model is called \iemph{model construction}.
+\end{definition}
+
+
+\paragraph{Further reading:} Chapter 6 of \cite{gelman_bayesian_2013}

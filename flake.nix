@@ -14,6 +14,7 @@
           zathura
           wmctrl
           which
+          gnuplot
           python39Packages.pygments
         ];
 

@@ -1,0 +1,36 @@
+%! TEX root = **/000-main.tex
+
+\section{Hierarchical Models}
+
+Hierarchical models treat the parameters of the \emph{prior} distribution
+as random variables, adding a new layer of uncertainty to the model:
+
+\begin{tikzpicture}
+    \node[align=center] (non-hier) {
+            Bayesian Model (non-hierarchical) \\[0.7em]
+            $\begin{aligned}
+                \tilde y &\sim p(\tilde y \mid \theta) \\
+                \theta &\sim \pi(\theta)
+            \end{aligned}$
+        };
+    \node[align=center, right=of non-hier] (hier) {
+            Hierarchical Bayesian Model \\[0.7em]
+            $\begin{aligned}
+                \tilde y &\sim p(\tilde y \mid \theta) \\
+                \theta &\sim \pi(\theta \mid \gamma ) \\
+                \gamma &\sim \Psi(\gamma)
+            \end{aligned}$
+        };
+\end{tikzpicture}
+
+We call $\gamma$ the \iemph{hyperparameter} of the model and $\Psi(\gamma)$
+the \iemph{hyperprior} distribution. We can have multiple layers of
+hyperparameters and hyperpriors.
+
+We can make inference and predictions at any level of the model.
+
+\paragraph{Observation} we can convert a hierarchical model into a non-hierarchical
+model by integrating out the hyperparameters. But then we lost the option
+of making inference and predictions at the second level.
+
+Further reading: Chapters 5 and 15 of \cite{gelman_bayesian_2013}

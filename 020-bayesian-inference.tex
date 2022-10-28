@@ -36,3 +36,124 @@ any region of $\Omega$ such that:
     p(\theta \in IC_p \mid y) = \int_{IC_p} \pi(\theta \mid y) \partial\theta = p
 \end{equation}
 Usually we use intervals based on percentiles.
+
+\begin{example}{Confidence interval}{}
+	\begin{nscenter}
+		\begin{tikzpicture}
+			\begin{axis}[
+					samples at={0,0.01,...,1},
+					width=0.8\textwidth,
+					height=0.33\textwidth,
+					ytick=\empty,
+					xmin=0,
+					xmax=5,
+					xlabel=$\theta$,
+					legend pos=north west,
+				]
+				\addplot [mark=none,black] gnuplot [raw gnuplot] {
+				\GnuplotDefs
+				plot [x=0:5] beta(x/5,9,5);
+				}; \addlegendentry{$\pi(\theta \mid y)$}
+				\addplot [mark=none,fill=blue,opacity=0.3,forget plot]gnuplot [raw gnuplot] {
+				\GnuplotDefs
+				plot [x=2:4.3] beta(x/5,9,5);
+				} \closedcycle;
+            \addlegendimage{area legend,fill=blue,opacity=0.3}; \addlegendentry{$p$}
+            \path (2,0) coordinate (L) (4.3,0) coordinate (R);
+			\end{axis}
+            \draw[decorate,decoration={brace,raise=1.9em}] (R) -- (L) node[midway,below=2.2em] {$CI_p$};
+		\end{tikzpicture}
+	\end{nscenter}
+    \begin{note}
+        For the CI to be valid, the two tails must have equal area $(1-p)/2$.
+    \end{note}
+\end{example}
+
+\subsection{Prediction}
+
+We use the posterior predictive distribution to make predictions about future observations.
+See definition~\ref{def:post-pred}.
+
+\subsection{Hypothesis Testing}
+
+Given a Bayesian model: $M = \{p(\tilde \theta \mid \theta),\,\theta \in \Omega\},\; \pi(\theta)$,
+we split the parameter space into two disjoint regions: $\Omega \equiv \Omega_0 \cup \Omega_1$
+and we want to decide to which subspace $\Omega_0$ or $\Omega_1$ the parameter $\theta$ belongs.
+We formulate the hypothesis as:
+\begin{align*}
+    H_0:\; \theta \in \Omega_0 \\
+    H_1:\; \theta \in \Omega_1
+\end{align*}
+
+After observing the data $y$, we can compute the posterior distribution for each hypothesis:
+\begin{align*}
+    p(H_0 \mid y) &= p(\theta \in \Omega_0 \mid y) = \int_{\Omega_0} \pi(\theta \mid y) d\theta \\
+    p(H_1 \mid y) &= p(\theta \in \Omega_1 \mid y) = \int_{\Omega_1} \pi(\theta \mid y) d\theta \\
+    \span \text{Since } \Omega_0 \cap \Omega_1 = \emptyset, \text{ we have:} \\
+    p(H_0 \mid y) &+ p(H_1 \mid y) = 1
+\end{align*}
+
+We choose the hypothesis with the \emph{highest} posterior probability.
+
+\begin{example}{Hypothesis testing, 3 hypothesis}{}
+    The time needed for a specific radioactive particle to disintegrate follows an exponential
+    model. Physicists agree to use a Gamma$(\alpha=10,\,\beta=10)$ as a prior distribution.
+
+    The Bayesian model is:
+    \begin{align*}
+        \tilde y \mid \lambda &\sim \exp(\lambda) \\
+        \lambda &\sim \text{Gamma}(\alpha=10,\,\beta=10)
+    \end{align*}
+    We want to choose among the following hypotheses:
+    \begin{alignat*}{1}
+        H_0&:\; \lambda \in [0,0.5] \\
+        H_1&:\; \lambda \in [0.5,1.5] \\
+        H_2&:\; \lambda \in [1.5,\infty)
+    \end{alignat*}
+
+    The observed data is: $0.9,\,1.1,\,1$ which corresponds to a posterior distribution:
+    \begin{equation*}
+        \lambda \mid y \sim \text{Gamma}(\alpha=13,\,\beta=13)
+    \end{equation*}
+
+    We calculate the posterior distribution for each hypothesis:
+
+    \begin{multicols}{2}
+        \begin{align*}
+            p(H_0 \mid y) &= \int_0^{0.5} \pi(\lambda \mid y) d\lambda \approxeq 0.016 \\
+            p(H_1 \mid y) &= \int_{0.5}^{1.5} \pi(\lambda \mid y) d\lambda \approxeq 0.935 \\
+            p(H_2 \mid y) &= \int_{1.5}^\infty \pi(\lambda \mid y) d\lambda \approxeq 0.049
+        \end{align*}
+        \vfill\null
+        \columnbreak
+        \null
+        \begin{tikzpicture}[
+            aoc/.style={draw=none,fill,opacity=0.3},
+            ]
+			\begin{axis}[
+					samples at={0,0.01,...,1},
+					width=0.50\textwidth,
+					height=0.33\textwidth,
+					ytick=\empty,
+					xmin=0,
+					xmax=2.5,
+					xlabel=$\lambda$,
+					legend pos=north east,
+				]
+
+				\addplot [aoc,fill=blue,forget plot] gnuplot [raw gnuplot] { \GnuplotDefs plot [x=0:0.5] gammaPdf(x,13,13); } \closedcycle;
+				\addplot [aoc,fill=green,forget plot] gnuplot [raw gnuplot] { \GnuplotDefs plot [x=0.5:1.5] gammaPdf(x,13,13); } \closedcycle;
+				\addplot [aoc,fill=red,forget plot] gnuplot [raw gnuplot] { \GnuplotDefs plot [x=1.5:2.5] gammaPdf(x,13,13); } \closedcycle;
+				\addplot [mark=none,black,line width=1.25pt] gnuplot [raw gnuplot] {
+				\GnuplotDefs
+				plot [x=0:2.5] gammaPdf(x,13,13);
+				}; \addlegendentry{$\pi(\lambda \mid y)$}
+            \addlegendimage{area legend,aoc,fill=blue}; \addlegendentry{$H_0$}
+            \addlegendimage{area legend,aoc,fill=green}; \addlegendentry{$H_1$}
+            \addlegendimage{area legend,aoc,fill=red}; \addlegendentry{$H_2$}
+			\end{axis}
+             % \draw[decorate,decoration={brace,raise=1.9em}] (R) -- (L) node[midway,below=2.2em] {$CI_p$};
+		\end{tikzpicture}
+\end{multicols}
+We choose the hypothesis with the highest posterior probability: $H_1$.
+\end{example}

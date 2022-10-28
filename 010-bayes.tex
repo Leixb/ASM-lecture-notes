@@ -1,4 +1,3 @@
-%! TEX root = **/000-main.tex
 
 \section{Bayesian Model}
 
@@ -63,7 +62,7 @@ according to the target audience.
 \subsection{Bayesian Model}
 
 \begin{definition}{Bayesian model}{}{}
-	A \iemph{Bayesian Model} is a Statistical Model where $\theta$ is a random variable
+	A \iemph{Bayesian Model} is a Statistical Model where $\theta$ is treated as a random variable
 	where the probability of $\theta$ is given by a prior distribution $\pi(\theta)$,
 	before looking at the data (it captures prior knowledge about $\theta$).
 
@@ -91,6 +90,37 @@ according to the target audience.
 The likelihood function sorts the parameter space $\Omega$ from most likely to least,
 so if $L_y(\theta_1) > L_y(\theta_2)$ it means that according to the data $y$,
 the parameter $\theta_1$ is more likely than $\theta_2$.
+
+\begin{example}{Probability of head after 10 coin tosses}{}
+	\begin{alignat*}{1}
+		\text{Statistical model:}   & \; \tilde y \mid \theta \sim \text{Binomial}(10, \theta), \; \theta \in [0,\,1] \\
+		\text{where:}               & \; \theta \text{ is the probability of head}                                    \\
+		\span \text{after 10 coin tosses, we observed 6 heads:} \; y = 6                                              \\
+		\text{Likelihood function:} & \; L_y(\theta) \propto p(y \mid \theta) = \binom{10}{6} \theta^6 (1-\theta)^4
+		\propto \theta^6 (1-\theta)^4
+	\end{alignat*}
+	%
+	\begin{nscenter}
+		\begin{tikzpicture}
+			\begin{axis}[
+					samples at={0,0.01,...,1},
+					width=0.8\textwidth,
+					height=0.3\textwidth,
+					ytick=\empty,
+					xmin=0,
+					xmax=1,
+					xlabel=$\theta$,
+					legend pos=north west,
+				]
+				\addplot[mark=none,line width=2pt] {binom(6,10,x)}; \addlegendentry{$L_y(\theta)$}
+				\draw[red,dashed,line width=2pt] (0.6,1) -- (0.6,0);
+				\addlegendimage{draw=red,dashed,line width=2pt}; \addlegendentry{$\theta^* = 0.6$}
+			\end{axis}
+		\end{tikzpicture}
+	\end{nscenter}
+	The maximum of the likelihood function is at $\theta = 0.6$. So according to the data,
+	$\theta^*$ is more likely to be 0.6 than any other value.
+\end{example}
 
 \begin{definition}{Standarized Likelihood function}{}{}
 	It's the likelihood function divided by its integral over the parameter space $\Omega$,
@@ -152,9 +182,94 @@ the parameter $\theta_1$ is more likely than $\theta_2$.
 	standardized likelihood function $L_y^{std}(\theta)$.
 \end{note}
 
+\begin{example}{Probability of head after 10 coin tosses $y=7$}{}
+	We assume that the probability of head is close to 50\%, so we chose an
+	informative prior distribution:
+	\begin{alignat*}{1}
+		\text{Statistical model:}      & \; \tilde y \mid \theta \sim \text{Binomial}(10, \theta), \; \theta \in [0,\,1] \\
+		\text{Prior distribution:}     & \; \theta \sim \pi(\theta) = \text{Beta}(50,\,50)                               \\
+		% \text{where:}             & \; \theta \text{ is the probability of head}                                    \\
+		\span \text{after 10 coin tosses, we observed 7 heads:} \; y = 7                                                 \\
+		% \span \text{From $y$ we calculate likelihood and posterior:} \\
+		\text{Likelihood function:}    & \; L_y(\theta) \propto p(y \mid \theta) = \binom{10}{7} \theta^7 (1-\theta)^3
+		\propto \theta^7 (1-\theta)^3                                                                                    \\
+		\text{Posterior distribution:} & \; \pi(\theta \mid y) = \text{Beta}(57,\,53)
+	\end{alignat*}
+	%
+	\begin{nscenter}
+		\begin{tikzpicture}
+			\begin{axis}[
+					samples at={0,0.01,...,1},
+					width=0.8\textwidth,
+					height=0.33\textwidth,
+					ytick=\empty,
+					xmin=0,
+					xmax=1,
+					xlabel=$\theta$,
+					legend pos=north west,
+				]
+				\addplot [mark=none,dashed,blue,line width=2pt]gnuplot [raw gnuplot] {
+				\GnuplotDefs
+				plot [x=0:1] beta(x,50,50);
+				}; \addlegendentry{$\pi(\theta)$}
+				\addplot[mark=none,blue,line width=2pt] gnuplot [raw gnuplot] {
+						\GnuplotDefs
+						plot [x=0:1] beta(x,57,53);
+					}; \addlegendentry{$\pi(\theta \mid y)$}
+				\addplot[mark=none,dotted,red,line width=2pt] {binom(7,10,x)*10}; \addlegendentry{$L_y(\theta)$}
+			\end{axis}
+		\end{tikzpicture}
+	\end{nscenter}
+\end{example}
+
+\begin{example}{Probability of head after 10 coin tosses $y=7$ v2}{}
+	We take a less-informative prior distribution, since we are not sure that the coin
+	is fair:
+	\begin{alignat*}{1}
+		\text{Statistical model:}      & \; \tilde y \mid \theta \sim \text{Binomial}(10, \theta), \; \theta \in [0,\,1] \\
+		\text{Prior distribution:}     & \; \theta \sim \pi(\theta) = \text{Beta}(2,\,2)                                 \\
+		% \text{where:}             & \; \theta \text{ is the probability of head}                                    \\
+		\span \text{after 10 coin tosses, we observed 7 heads:} \; y = 7                                                 \\
+		% \span \text{From $y$ we calculate likelihood and posterior:} \\
+		\text{Likelihood function:}    & \; L_y(\theta) \propto p(y \mid \theta) = \binom{10}{7} \theta^7 (1-\theta)^3
+		\propto \theta^7 (1-\theta)^3                                                                                    \\
+		\text{Posterior distribution:} & \; \pi(\theta \mid y) = \text{Beta}(9,\,5)
+	\end{alignat*}
+	\vspace{-1em}
+	\begin{nscenter}
+		\begin{tikzpicture}
+			\begin{axis}[
+					samples at={0,0.01,...,1},
+					width=0.8\textwidth,
+					height=0.33\textwidth,
+					ytick=\empty,
+					xmin=0,
+					xmax=1,
+					xlabel=$\theta$,
+					legend pos=north west,
+				]
+				\addplot [mark=none,dashed,blue,line width=2pt]gnuplot [raw gnuplot] {
+				\GnuplotDefs
+				plot [x=0:1] beta(x,2,2);
+				}; \addlegendentry{$\pi(\theta)$}
+				\addplot[mark=none,blue,line width=2pt] gnuplot [raw gnuplot] {
+						\GnuplotDefs
+						plot [x=0:1] beta(x,9,5);
+					}; \addlegendentry{$\pi(\theta \mid y)$}
+				\addplot[mark=none,dotted,red,line width=2pt] {binom(7,10,x)*10}; \addlegendentry{$L_y(\theta)$}
+			\end{axis}
+		\end{tikzpicture}
+	\end{nscenter}
+	\begin{note}
+		With a less informative prior, the posterior distribution is more affected by the
+		likelihood function. If we were to use a flat prior, the posterior would be equal
+		to the likelihood function.
+	\end{note}
+\end{example}
+
 \begin{recap}{}{}
 	\centering
-	\begin{tikzpicture}[every node/.style={rectangle,draw}]
+	\begin{tikzpicture}[every node/.style={rectangle,draw,fill=white}]
 		\node[align=center] (model) {%
 			Bayesian model\\[1em]
 			$\begin{aligned}
@@ -172,7 +287,7 @@ the parameter $\theta_1$ is more likely than $\theta_2$.
 					\theta \mid y        & \sim \pi(\theta \mid y)
 				\end{aligned}$};
 
-		\node[right=of updated,align=center,draw=none] (post) {Posterior distribution \\[1em]
+		\node[right=of updated,align=center,draw=none,fill=none] (post) {Posterior distribution \\[1em]
 			$ \pi(\theta \mid y) = \frac{L_y(\theta) \pi(\theta)}{\int L_y(\theta)\pi(\theta)d\theta} $};
 
 		\draw[->,line width=5pt] (model) -- (bayes) -- (updated);
@@ -181,7 +296,7 @@ the parameter $\theta_1$ is more likely than $\theta_2$.
 	\end{tikzpicture}
 \end{recap}
 
-\subsection{Prior and posterior predictive distributions}
+\subsection{Prior and posterior predictive distributions}%
 
 \begin{definition}{Prior predictive distribution}{}
 	The \iemph{marginal distribution} of $\tilde{y}$, called the \iemph{prior predictive distribution},
@@ -209,7 +324,7 @@ The prior's parameters can be chosen in two ways:
 	\item Prior predictive distribution $p(\tilde y)$ if the information we have is about the sample space.
 \end{itemize}
 
-\begin{definition}{Posterior predictive distribution}{}
+\begin{definition}{Posterior predictive distribution}{post-pred}
 	Once the data $y$ is observed, we update the model to reflect the new information,
 	changing the prior distribution $\pi(\theta)$ into the posterior distribution $\pi(\theta \mid y)$.
 	Which means that the prior predictive distribution $p(\tilde y)$ is replaced by the
@@ -220,32 +335,32 @@ The prior's parameters can be chosen in two ways:
 
 	\paragraph{Observations}
 	\begin{itemize}
-        \item $\pi(\theta y \mid y)$ shows everything we know about the parameter.
-        \item $p(\tilde y \mid y)$ shows everything we know about the data behavior.
+		\item $\pi(\theta y \mid y)$ shows everything we know about the parameter.
+		\item $p(\tilde y \mid y)$ shows everything we know about the data behavior.
 	\end{itemize}
 \end{definition}
 
 Predictive distributions can be calculated in two ways:
 \begin{itemize}
-    \item Analytically: solving integrals:
-        \begin{align*}
-            p(\tilde y) &= \int_{\Omega} p(\tilde y \mid \theta) \pi(\theta) d\theta \\
-            p(\tilde y \mid y) &= \int_{\Omega} p(\tilde y \mid \theta) \pi(\theta \mid y) d\theta
-        \end{align*}
-    \item Numerically (by simulation): sampling from the posterior distribution:
-        \begin{enumerate}
-            \item Decide on a number of simulations $M$ (the larger the better).
-            \item Sample $\theta^{(j)}$ from $\pi(\theta \mid y)$.
-            \item Sample $\tilde y^{(j)}$ from $p(\tilde y \mid \theta^{(j)})$.
-            \item Repeat $j=1,\ldots,M$.
-        \end{enumerate}
-        These values $\tilde y^{(j)}$ can be used to calculate everything we want to know:
-        mean, variance, quantiles, shape of the distribution, etc.
+	\item Analytically: solving integrals:
+	      \begin{align*}
+		      p(\tilde y)        & = \int_{\Omega} p(\tilde y \mid \theta) \pi(\theta) d\theta        \\
+		      p(\tilde y \mid y) & = \int_{\Omega} p(\tilde y \mid \theta) \pi(\theta \mid y) d\theta
+	      \end{align*}
+	\item Numerically (by simulation): sampling from the posterior distribution:
+	      \begin{enumerate}
+		      \item Decide on a number of simulations $M$ (the larger the better).
+		      \item Sample $\theta^{(j)}$ from $\pi(\theta \mid y)$.
+		      \item Sample $\tilde y^{(j)}$ from $p(\tilde y \mid \theta^{(j)})$.
+		      \item Repeat $j=1,\ldots,M$.
+	      \end{enumerate}
+	      These values $\tilde y^{(j)}$ can be used to calculate everything we want to know:
+	      mean, variance, quantiles, shape of the distribution, etc.
 \end{itemize}
 
 \begin{recap}{}{}
 	\centering
-	\begin{tikzpicture}[every node/.style={rectangle,draw}]
+	\begin{tikzpicture}[every node/.style={rectangle,draw,fill=white}]
 		\node[align=center] (model) {%
 			Bayesian model\\[1em]
 			$\begin{aligned}
@@ -263,12 +378,12 @@ Predictive distributions can be calculated in two ways:
 					\theta \mid y        & \sim \pi(\theta \mid y)
 				\end{aligned}$};
 
-		\node[right=of model,draw=none] (prior) {
-                $p(\tilde y)$ (prior predictive dist.)
-            };
-		\node[right=of updated,draw=none] (post) {
-                $p(\tilde y \mid y)$ (posterior predictive dist.)
-            };
+		\node[right=of model,draw=none,fill=none] (prior) {
+			$p(\tilde y)$ (prior predictive dist.)
+		};
+		\node[right=of updated,draw=none,fill=none] (post) {
+			$p(\tilde y \mid y)$ (posterior predictive dist.)
+		};
 
 		\draw[->,line width=5pt] (model) -- (bayes) -- (updated);
 		\draw[->,line width=5pt] (data) -- (bayes);
@@ -284,21 +399,22 @@ studies and subjective knowledge of experts. In case of not having information o
 not being able to agree on the knowledge of experts, we will use a \iemph{non-informative prior}.
 
 \begin{definition}{Conjugate prior}{}
-    A prior distribution $\pi(\theta)$ is the \iemph{conjugate} prior of a statistical model
-    if the posterior distribution $\pi(\theta \mid y)$ is of the same family as the prior.
+	A prior distribution $\pi(\theta)$ is the \iemph{conjugate} prior of a statistical model
+	if the posterior distribution $\pi(\theta \mid y)$ is of the same family as the prior.
 
-    \begin{ex}
-        \begin{center}
-        \begin{tabular}{ccc}
-            \toprule
-            Model & Prior & Posterior \\
-            \midrule
-            Binomial($n,\theta$) & Beta($\alpha,\beta$) & Beta($\alpha + y,\beta + n - y$) \\
-            Poisson($\lambda$) & Gamma($\alpha,\beta$) & Gamma($\alpha + y,\beta + 1$) \\
-            \bottomrule
-        \end{tabular}
-    \end{center}
-    \end{ex}
+	\begin{table}[H]
+		\caption{Examples of conjugate priors}
+		\colorbox{white}{%
+			\begin{tabular}{ccc}
+				\toprule
+				Model                & Prior                 & Posterior                        \\
+				\midrule
+				Binomial($n,\theta$) & Beta($\alpha,\beta$)  & Beta($\alpha + y,\beta + n - y$) \\
+				Poisson($\lambda$)   & Gamma($\alpha,\beta$) & Gamma($\alpha + y,\beta + 1$)    \\
+				\bottomrule
+			\end{tabular}%
+		}
+	\end{table}
 
 \end{definition}
 
