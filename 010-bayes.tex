@@ -111,9 +111,10 @@ the parameter $\theta_1$ is more likely than $\theta_2$.
 					xmax=1,
 					xlabel=$\theta$,
 					legend pos=north west,
+                    ymin=0,
 				]
+				\draw[red,dashed,line width=2pt] (0.6,1) -- (0.6,-0.2);
 				\addplot[mark=none,line width=2pt] {binom(6,10,x)}; \addlegendentry{$L_y(\theta)$}
-				\draw[red,dashed,line width=2pt] (0.6,1) -- (0.6,0);
 				\addlegendimage{draw=red,dashed,line width=2pt}; \addlegendentry{$\theta^* = 0.6$}
 			\end{axis}
 		\end{tikzpicture}
@@ -126,16 +127,16 @@ the parameter $\theta_1$ is more likely than $\theta_2$.
 	It's the likelihood function divided by its integral over the parameter space $\Omega$,
 	so that it integrates to 1 and it's a probability distribution:
 	\begin{equation}
-		\tilde{L}_y^{std}(\theta) = \frac{L_y(\theta)}{\int_{\Omega} L_y(\theta) d\theta}
+		\tilde{L}_y^{std}(\theta) = \frac{L_y(\theta)}{\int_{\Omega} L_y(\theta) \;d\theta}
 	\end{equation}
 \end{definition}
 
 
-\begin{recap}{}{}{}
+\begin{recap}{Prior and Likelihood}{}{}
 	A Statistical model $M$ is a (not sorted) list of probability models, one for
 	each value of the parameter $\theta \in \Omega$:
 	\begin{equation*}
-		M = \{ p(\tilde{y}\mid\theta), \; \theta \in \Omega \}
+		M = \left\{ p(\tilde{y}\mid\theta), \; \theta \in \Omega \right\}
 	\end{equation*}
 
 	\begin{itemize}
@@ -149,7 +150,7 @@ the parameter $\theta_1$ is more likely than $\theta_2$.
 \subsection{Posterior Distribution}
 
 \begin{definition}{Posterior Distribution}{}{}
-	The posterior distribution $\pi(\theta \mid y)$ shows the information we have
+    The \iemph{posterior distribution} $\pi(\theta \mid y)$ shows the information we have
 	about the parameter $\theta$ after looking at the data $y$.
 
 	It is calculated using Bayes Theorem \ref{th:bayes}:
@@ -161,7 +162,7 @@ the parameter $\theta_1$ is more likely than $\theta_2$.
 	data $y$, which we will also call the \iemph{prior predictive distribution} evaluated at
 	the data:
 	\begin{equation}
-		p(\tilde y = y) = p(y) = \int_{\Omega} p(y,\,\theta) d\theta = \int_{\Omega} p(y \mid \theta) \pi(\theta) d\theta
+		p(\tilde y = y) = p(y) = \int_{\Omega} p(y,\,\theta) \;d\theta = \int_{\Omega} p(y \mid \theta) \pi(\theta) \;d\theta
 	\end{equation}
 
 	\begin{note}
@@ -207,6 +208,9 @@ the parameter $\theta_1$ is more likely than $\theta_2$.
 					xmax=1,
 					xlabel=$\theta$,
 					legend pos=north west,
+                    ymin=0,
+                    ymax=9,
+                    legend cell align={left},
 				]
 				\addplot [mark=none,dashed,blue,line width=2pt]gnuplot [raw gnuplot] {
 				\GnuplotDefs
@@ -247,6 +251,9 @@ the parameter $\theta_1$ is more likely than $\theta_2$.
 					xmax=1,
 					xlabel=$\theta$,
 					legend pos=north west,
+                    ymin=0,
+                    ymax=9,
+                    legend cell align={left},
 				]
 				\addplot [mark=none,dashed,blue,line width=2pt]gnuplot [raw gnuplot] {
 				\GnuplotDefs
@@ -267,7 +274,7 @@ the parameter $\theta_1$ is more likely than $\theta_2$.
 	\end{note}
 \end{example}
 
-\begin{recap}{}{}
+\begin{recap}{Posterior distribution}{}
 	\centering
 	\begin{tikzpicture}[every node/.style={rectangle,draw,fill=white}]
 		\node[align=center] (model) {%
@@ -288,7 +295,7 @@ the parameter $\theta_1$ is more likely than $\theta_2$.
 				\end{aligned}$};
 
 		\node[right=of updated,align=center,draw=none,fill=none] (post) {Posterior distribution \\[1em]
-			$ \pi(\theta \mid y) = \frac{L_y(\theta) \pi(\theta)}{\int L_y(\theta)\pi(\theta)d\theta} $};
+			$ \pi(\theta \mid y) = \frac{L_y(\theta) \pi(\theta)}{\int L_y(\theta)\pi(\theta)\;d\theta} $};
 
 		\draw[->,line width=5pt] (model) -- (bayes) -- (updated);
 		\draw[->,line width=5pt] (data) -- (bayes);
@@ -302,7 +309,7 @@ the parameter $\theta_1$ is more likely than $\theta_2$.
 	The \iemph{marginal distribution} of $\tilde{y}$, called the \iemph{prior predictive distribution},
 	represents our knowledge and uncertainty about the sample space $\tilde{y}$ before looking at the data $y$:
 	\begin{equation}
-		p(\tilde y) = \int_{\Omega} p(\tilde y ,\, \theta) d\theta = \int_{\Omega} p(\tilde y \mid \theta) \pi(\theta) d\theta
+		p(\tilde y) = \int_{\Omega} p(\tilde y ,\, \theta) \;d\theta = \int_{\Omega} p(\tilde y \mid \theta) \pi(\theta) \;d\theta
 	\end{equation}
 
 	\paragraph{Observations}
@@ -330,7 +337,7 @@ The prior's parameters can be chosen in two ways:
 	Which means that the prior predictive distribution $p(\tilde y)$ is replaced by the
 	\iemph{posterior predictive distribution} $p(\tilde y \mid y)$:
 	\begin{equation}
-		p(\tilde y \mid y) = \int_{\Omega} p(\tilde y \mid \theta) \pi(\theta \mid y) d\theta
+		p(\tilde y \mid y) = \int_{\Omega} p(\tilde y \mid \theta) \pi(\theta \mid y) \;d\theta
 	\end{equation}
 
 	\paragraph{Observations}
@@ -344,8 +351,8 @@ Predictive distributions can be calculated in two ways:
 \begin{itemize}
 	\item Analytically: solving integrals:
 	      \begin{align*}
-		      p(\tilde y)        & = \int_{\Omega} p(\tilde y \mid \theta) \pi(\theta) d\theta        \\
-		      p(\tilde y \mid y) & = \int_{\Omega} p(\tilde y \mid \theta) \pi(\theta \mid y) d\theta
+		      p(\tilde y)        & = \int_{\Omega} p(\tilde y \mid \theta) \pi(\theta) \;d\theta        \\
+		      p(\tilde y \mid y) & = \int_{\Omega} p(\tilde y \mid \theta) \pi(\theta \mid y) \;d\theta
 	      \end{align*}
 	\item Numerically (by simulation): sampling from the posterior distribution:
 	      \begin{enumerate}
@@ -358,7 +365,7 @@ Predictive distributions can be calculated in two ways:
 	      mean, variance, quantiles, shape of the distribution, etc.
 \end{itemize}
 
-\begin{recap}{}{}
+\begin{recap}{Predictive distributions}{}
 	\centering
 	\begin{tikzpicture}[every node/.style={rectangle,draw,fill=white}]
 		\node[align=center] (model) {%
@@ -410,7 +417,7 @@ not being able to agree on the knowledge of experts, we will use a \iemph{non-in
 				Model                & Prior                 & Posterior                        \\
 				\midrule
 				Binomial($n,\theta$) & Beta($\alpha,\beta$)  & Beta($\alpha + y,\beta + n - y$) \\
-				Poisson($\lambda$)   & Gamma($\alpha,\beta$) & Gamma($\alpha + y,\beta + 1$)    \\
+                Poisson($\lambda$)   & Gamma($\alpha,\beta$) & Gamma($\alpha + n,\beta + \sum_{i=1}^n y_i$)    \\
 				\bottomrule
 			\end{tabular}%
 		}

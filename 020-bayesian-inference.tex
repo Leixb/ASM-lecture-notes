@@ -15,8 +15,8 @@ Bayesian estimator for $\theta$ given the data $y$.
 Any measure of the location of $\pi(\theta \mid y)$ will serve as a point
 estimate:
 \begin{align*}
-    \hat{\theta}_{pe} &= E(\theta \mid y) = \int \theta \pi(\theta \mid y) \partial\theta \\
-    \hat{\theta}_{pme} &\text{ is such that } \int_{-\infty}^{\hat{\theta}_{pme}} \pi(\theta \mid y) \partial\theta = \frac{1}{2} \\
+    \hat{\theta}_{pe} &= E(\theta \mid y) = \int \theta \pi(\theta \mid y) \;\partial\theta \\
+    \hat{\theta}_{pme} &\text{ is such that } \int_{-\infty}^{\hat{\theta}_{pme}} \pi(\theta \mid y) \;\partial\theta = \frac{1}{2} \\
     \hat{\theta}_{pmo} &= \argmax_{\theta} \pi(\theta \mid y) \\
 \end{align*}
 
@@ -33,7 +33,7 @@ instead of the posterior distribution.
 A posterior credibility (or probability) interval of $p$ for $\theta$, $IC_p$ is
 any region of $\Omega$ such that:
 \begin{equation}
-    p(\theta \in IC_p \mid y) = \int_{IC_p} \pi(\theta \mid y) \partial\theta = p
+    p(\theta \in IC_p \mid y) = \int_{IC_p} \pi(\theta \mid y) \;\partial\theta = p
 \end{equation}
 Usually we use intervals based on percentiles.
 
@@ -87,8 +87,8 @@ We formulate the hypothesis as:
 
 After observing the data $y$, we can compute the posterior distribution for each hypothesis:
 \begin{align*}
-    p(H_0 \mid y) &= p(\theta \in \Omega_0 \mid y) = \int_{\Omega_0} \pi(\theta \mid y) d\theta \\
-    p(H_1 \mid y) &= p(\theta \in \Omega_1 \mid y) = \int_{\Omega_1} \pi(\theta \mid y) d\theta \\
+    p(H_0 \mid y) &= p(\theta \in \Omega_0 \mid y) = \int_{\Omega_0} \pi(\theta \mid y) \;d\theta \\
+    p(H_1 \mid y) &= p(\theta \in \Omega_1 \mid y) = \int_{\Omega_1} \pi(\theta \mid y) \;d\theta \\
     \span \text{Since } \Omega_0 \cap \Omega_1 = \emptyset, \text{ we have:} \\
     p(H_0 \mid y) &+ p(H_1 \mid y) = 1
 \end{align*}
@@ -120,9 +120,9 @@ We choose the hypothesis with the \emph{highest} posterior probability.
 
     \begin{multicols}{2}
         \begin{align*}
-            p(H_0 \mid y) &= \int_0^{0.5} \pi(\lambda \mid y) d\lambda \approxeq 0.016 \\
-            p(H_1 \mid y) &= \int_{0.5}^{1.5} \pi(\lambda \mid y) d\lambda \approxeq 0.935 \\
-            p(H_2 \mid y) &= \int_{1.5}^\infty \pi(\lambda \mid y) d\lambda \approxeq 0.049
+            p(H_0 \mid y) &= \int_0^{0.5} \pi(\lambda \mid y) \;d\lambda \approxeq 0.016 \\
+            p(H_1 \mid y) &= \int_{0.5}^{1.5} \pi(\lambda \mid y) \;d\lambda \approxeq 0.935 \\
+            p(H_2 \mid y) &= \int_{1.5}^\infty \pi(\lambda \mid y) \;d\lambda \approxeq 0.049
         \end{align*}
         \vfill\null
         \columnbreak

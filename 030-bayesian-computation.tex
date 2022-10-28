@@ -61,17 +61,20 @@ If the chains have not converged, we should increase the number of iterations.
 				xmin=0,
 				xmax=3000,
 				xlabel={Iteration},
-				legend pos=north east,
+				legend pos=south east,
                 xtick={0,500,1000,1500,2000,2500,3000},
+                legend columns=-1,
+                legend style={/tikz/every even column/.append style={column sep=0.4em}}]
 			]
+            \addplot[mark=none,color=red,samples at={0,10,...,1000}]
+                {rand*10 - x*0.02+50}; \addlegendentry{Chain 1 };
+            \addplot[mark=none,color=green,samples at={0,10,...,1000}]
+                {rand*10 + x*0.03}; \addlegendentry{Chain 2 };
             \addlegendimage{dashed,blue,line width=2pt};
             \addlegendentry{$B$};
-            \addplot[mark=none,color=red,samples at={0,10,...,1000}]
-                {rand*10 - x*0.02+50};
+
             \addplot[mark=none,color=red,samples at={1000,1010,...,3000}]
                 {30 + rand*10};
-            \addplot[mark=none,color=green,samples at={0,10,...,1000}]
-                {rand*10 + x*0.03};
             \addplot[mark=none,color=green,samples at={1000,1010,...,3000}]
                 {30 + rand*10};
             \draw[dashed,blue,line width=2pt] (1000,-100) -- (1000,100);
@@ -95,7 +98,7 @@ the number of iterations, the burn-in period and the thinning factor.
 The thinning factor allows us to reduce the autocorrelation in the chain
 by only keeping every $n$ values.
 
-\begin{recap}{}{}
+\begin{recap}{Bayesian Computation}{}
 	\begin{itemize}
 		\item MCMC algorithms allow us to simulate values from the posterior distribution
 		      starting from the Bayesian model and the data.

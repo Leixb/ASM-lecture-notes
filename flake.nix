@@ -27,7 +27,8 @@
         };
 
         packages.document = latex.lib.latexmk {
-          inherit pkgs texlive;
+          inherit pkgs;
+          texlive = [texlive pkgs.gnuplot];
           src = ./.;
           shellEscape = true;
           minted = true;
