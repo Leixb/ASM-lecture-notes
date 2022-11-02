@@ -1,0 +1,62 @@
+\chapter{Time Series}
+\section{Stationarity and transformations}
+
+\begin{definition}{Time series}{time-series}\index{time-series}
+	Ordered sequence of observations of the same phenomenon. Typically
+	measured at equally spaced successive instants of time.
+	\begin{equation*}
+		\{X_t\}_{t=1,\ldots,T} = \{X_1, X_2, \ldots, X_T\}
+	\end{equation*}
+\end{definition}
+
+\subsection{Motivation}
+
+Describing and forecasting time series is crucial in different areas of
+knowledge; including finance, econometrics, signal processing and a long etc.
+
+\subsection{Objectives}
+
+\begin{itemize}
+	\item \textbf{Description}: Describe temporal patterns in a time series: regular and/or
+	      seasonal effects, cyclicity, trends, outliers, sudden changes, breaks, \dots
+	\item \textbf{Estimation}: Estimate the values of the time series parameters.
+	\item \textbf{Validation}: Validate the estimated parameters and decide if the estimated
+	      parameters are significant or not.
+	\item \textbf{Prediction/Forecasting}: Predict future values of the time series.
+\end{itemize}
+
+\begin{example}{AirPassengers}{}
+	Monthly totals of international airline passengers in USA, 1949
+	to 1960 (Box \& Jenkins, 1976).
+	\begin{verbatim}
+##      Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
+## 1949 112 118 132 129 121 135 148 148 136 119 104 118
+## 1950 115 126 141 135 125 149 170 170 158 133 114 140
+## 1951 145 150 178 163 172 178 199 199 184 162 146 166
+## 1952 171 180 193 181 183 218 230 242 209 191 172 194
+## 1953 196 196 236 235 229 243 264 272 237 211 180 201
+## 1954 204 188 235 227 234 264 302 293 259 229 203 229
+## 1955 242 233 267 269 270 315 364 347 312 274 237 278
+## 1956 284 277 317 313 318 374 413 405 355 306 271 306
+## 1957 315 301 356 348 355 422 465 467 404 347 305 336
+## 1958 340 318 362 348 363 435 491 505 404 359 310 337
+## 1959 360 342 406 396 420 472 548 559 463 407 362 405
+## 1960 417 391 419 461 472 535 622 606 508 461 390 432
+\end{verbatim}
+	\begin{nscenter}
+		\begin{tikzpicture}
+			\begin{axis}[
+					width=0.9\textwidth,
+					height=0.4\textwidth,
+					date coordinates in=x,
+					table/col sep=comma,
+					xlabel=Time,
+					ylabel=AirPassengers,
+					xticklabel=\year,
+					xtick distance=366*2,
+				]
+				\addplot table[x=Month,y=Passengers] {data/AirPassengers.csv};
+			\end{axis}
+		\end{tikzpicture}
+	\end{nscenter}
+\end{example}

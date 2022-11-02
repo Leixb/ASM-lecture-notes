@@ -49,6 +49,9 @@
 
 
 \usetikzlibrary{shapes,arrows,positioning,calc}
+\usetikzlibrary{
+    pgfplots.dateplot,
+}
 
 \usepackage{cancel}
 \usepackage{mathrsfs}
@@ -141,12 +144,15 @@
 
 % \selectcolormodel{gray}
 
-% Theory
+% Bayes
 \include{010-bayes}
 \include{020-bayesian-inference}
 \include{030-bayesian-computation}
 \include{040-hierarchical-models}
 \include{050-model-checking}
+
+% Time series
+\include{110-stochastic-processes}
 
 % \nocite{*}
 
