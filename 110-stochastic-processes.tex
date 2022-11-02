@@ -1,5 +1,5 @@
 \chapter{Time Series}
-\section{Stationarity and transformations}
+\section{Introduction}
 
 \begin{definition}{Time series}{time-series}\index{time-series}
 	Ordered sequence of observations of the same phenomenon. Typically
@@ -25,7 +25,7 @@ knowledge; including finance, econometrics, signal processing and a long etc.
 	\item \textbf{Prediction/Forecasting}: Predict future values of the time series.
 \end{itemize}
 
-\begin{example}{AirPassengers}{}
+\begin{example}{AirPassengers}{AirPassengers}
 	Monthly totals of international airline passengers in USA, 1949
 	to 1960 (Box \& Jenkins, 1976).
 	\begin{verbatim}
@@ -51,12 +51,300 @@ knowledge; including finance, econometrics, signal processing and a long etc.
 					date coordinates in=x,
 					table/col sep=comma,
 					xlabel=Time,
-					ylabel=AirPassengers,
+					ylabel=Passengers,
 					xticklabel=\year,
 					xtick distance=366*2,
+					mark size=1pt,
+					mark=o,
+					xmajorgrids=true,
+					minor x tick num=1,
+					xminorgrids=true,
 				]
 				\addplot table[x=Month,y=Passengers] {data/AirPassengers.csv};
 			\end{axis}
 		\end{tikzpicture}
 	\end{nscenter}
 \end{example}
+
+\subsection{Exploratory Data analysis}
+
+Plot of the series and identification of the components:
+
+\begin{definition}{Trend ($T_t$)}{trend}\index{trend}
+	Long term tendency of the series.
+
+	Moving average of order $s$:
+	\begin{equation*}
+		T_t = \frac{1}{s} \sum_{i=1}^s X_{t-s/2+i}
+	\end{equation*}
+\end{definition}
+
+\begin{definition}{Seasonal ($S_t$)}{seasonal}\index{seasonal}
+	Pattern repeated periodically with the same period.
+
+	\index{detrended series}
+	\paragraph{Seasonal index} Mean for each period of detrended series ($X_t - T_t$).
+\end{definition}
+
+\begin{definition}{Cycle ($C_t$)}{cycle}\index{cycle}
+	Pattern repeated periodically with \emph{non-constant} period.
+
+	\vspace{1em}
+	\begin{marker}
+		Not easy to model due to the changing period.
+	\end{marker}
+\end{definition}
+
+\begin{definition}{Random ($w_t$)}{random}\index{random}
+	Random noise.
+
+	\paragraph{Remainder} ($X_t - T_t - S_t - C_t$)
+\end{definition}
+
+Our \emph{goal} is to find a mathematical model that reflects the behavior of the observed
+data.
+
+\subsection{Modeling}
+
+\subsubsection{Additive model}
+We add the different components:\index{additive model}
+\begin{equation}
+	X_t = T_t + S_t + C_t + w_t \tag{additive}
+\end{equation}
+
+\begin{figure}[H]
+	\begin{tikzpicture}
+		\begin{axis}[
+				width=0.9\textwidth,
+				height=0.5\textwidth,
+				date coordinates in=x,
+				xticklabel=\year,
+				xtick distance=366*2,
+				xlabel=Time,
+				ylabel=Passengers,
+				ymajorgrids=true,
+				yminorgrids=true,
+				xmajorgrids=true,
+				minor x tick num=1,
+				xminorgrids=true,
+				legend pos=north west,
+			]
+			\directlua{dofile("lua/decomposition.lua")}
+
+			\addlegendentry{$X$ (data)}
+			\addlegendentry{$T$ (trend)}
+			\addlegendentry{$S$ (seasonal)}
+			\addlegendentry{$T+S$}
+			\addlegendentry{$w = X-T-S$ (random)}
+		\end{axis}
+	\end{tikzpicture}
+	\caption{Decomposition of the \texttt{AirPassengers} series from example~\ref{example:AirPassengers}}
+\end{figure}
+
+\subsubsection{Deterministic model}
+The expected value of $X_t$ depends on a parametric function $F$ of $t$ and the random
+component does not depend on the previous values.
+\begin{equation}
+	X_t = F(t) + Z_t \qquad Z_t \sim N(0,\, \sigma_z^2) \tag{deterministic}
+\end{equation}
+
+\subsubsection{Stochastic model}
+The expected value of $X_t$ depends on the previous values $X_{t-1}, X_{t-2}, \dots$ and/or
+the previous random components $Z_{t-1}, Z_{t-2}, \dots$ plus a random component independent
+of the past $Z_t$.
+\begin{equation}
+	X_t = G(X_{t-1}, X_{t-2}, \dots, Z_{t-1}, Z_{t-2}, \dots) + Z_t \qquad Z_t \sim N(0,\, \sigma_z^2) \tag{stochastic}
+\end{equation}
+
+\subsection{Box-Jenkins methodology}
+
+\begin{nscenter}
+	\begin{tikzpicture}[
+			box/.style={draw, rectangle, minimum width=5cm, minimum height=1.5cm, align=center},
+			decision/.style={diamond, minimum width=2cm, minimum height=1cm, align=center},
+			box_l/.style={align=left},
+		]
+		\node[box, rounded corners] (ti) {Tentative\\Identification};
+		\node[box, below=of ti] (est) {Estimation};
+		\node[box, below=of est] (val) {Diagnostic\\ Checking};
+		\node[box, decision, below=of val] (dec) {Model\\ok?};
+		\node[box, rounded corners, below=of dec] (fin) {Final Model};
+
+		\node[box_l, right=of ti] {Time Series Plot \\Range-Mean Plot\\ACF and PACF};
+		\node[box_l, right=of est] {Least Squares or\\Maximum Likelihood};
+		\node[box_l, right=of val] {Residual Analysis\\and Forecasts};
+		\node[box_l, right=of fin] {Forecasting\\Explanation};
+
+
+		\draw[->] (ti) -- (est);
+		\draw[->] (est) -- (val);
+		\draw[->] (val) -- (dec);
+		\draw[->] (dec) edge[edge label={Yes}] (fin);
+
+        \coordinate (fb) at ($(val.west)+(-3em,0)$);
+        \node (no) at ($(dec.west)+(-2em,0)$) {No};
+        \draw[->] (dec.west) -- (no) -| (fb) |- (ti.west);
+	\end{tikzpicture}
+\end{nscenter}
+
+\subsection{Distribution of a general stochastic process}
+
+First and second moments for the multivariate distribution of $\{X_t\}_{t=1\dots T}$:
+\begin{align*}
+	\mathbb{E}[(X_1, \dots, X_T)] & = (\mu_1, \dots, \mu_T)                                              \\
+	Var[(X_1, \dots, X_T)]        & = \begin{pmatrix}
+		                                  \sigma_1^2   & \sigma_{1,2} & \sigma_{1,3} & \dots  & \sigma_{T,1} \\
+		                                  \sigma_{2,1} & \sigma_2^2   & \sigma_{2,3} & \dots  & \sigma_{T,2} \\
+		                                  \sigma_{3,1} & \sigma_{3,2} & \sigma_3^2   & \dots  & \sigma_{T,3} \\
+		                                  \vdots       & \vdots       & \vdots       & \ddots & \vdots       \\
+		                                  \sigma_{T,1} & \sigma_{T,2} & \sigma_{T,3} & \dots  & \sigma_T^2
+	                                  \end{pmatrix}
+\end{align*}
+
+Parameters of the model:
+\begin{itemize}
+    \item $T$ values for the mean $\mathbb{E}(X_t) = \mu_t$
+    \item $T$ values for the variances $Var(X_t) = \sigma_t^2$
+    \item $T(T-1)$ values for the covariances $Cov(X_t, X_s) = \sigma_{t,s}$
+\end{itemize}
+
+\subsection{Stationary Series}
+
+Strict Stationary Process or Series has the following properites:
+The joint distribution of the whole series does not depend on the time
+origin:
+\begin{equation}
+    F_{X_1, \dots, X_t}(x_1, \dots, x_t) = F_{X_{1+s}, \dots, X_{t+s}}(x_{1+s}, \dots x_{t+s}) \forall t,s
+\end{equation}
+
+\subsection{Weakly Stationary process}
+The two first moments of the multivariate distribution of the whole series
+does not depend on the time origin:
+\begin{itemize}
+    \item Constant mean $\mu$.
+    \item Constant variance $\sigma^2$.
+    \item Constant auto-covariance structure $\sigma_{t,s} = \sigma_{\lVert t - s \rVert}$.
+    \item The latter refers to the covariance between $X_t$ and $X_{t-1}$ being equal to 
+        the covariance between $X_{t-s}$ and $X_{t-s-1}$.
+\end{itemize}
+
+Weakly Stationary process + Gaussian multivariate distribution $\Longrightarrow$ Strict Stationary process.
+
+\begin{question}{Is our data stationary? How can we detect?}{}
+    \begin{itemize}
+        \item Plot the data.
+        \item Identify no stationary components (trends, seasonal patterns, cycles).
+        \item Transform the series to remove those components.
+        \item For the transformed (stationary) series, plot and analyze the sample autocorrelation.
+    \end{itemize}
+\end{question}
+
+\begin{marker}
+    It is very common that the variance of the series increases when the level of the series rises.
+\end{marker}
+
+\begin{figure}[H]
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.48\textwidth,
+                height=0.4\textwidth,
+                date coordinates in=x,
+                table/col sep=comma,
+                xlabel=Time,
+                ylabel=Passengers,
+                xticklabel=\year,
+                xtick distance=366*4,
+                mark size=1pt,
+                mark=o,
+                xmajorgrids=true,
+                minor x tick num=1,
+                xminorgrids=true,
+                title={\bfseries Non-Constant Variance},
+            ]
+            \addplot table[x=Month,y=Passengers] {data/AirPassengers.csv};
+        \end{axis}
+    \end{tikzpicture}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.48\textwidth,
+                height=0.4\textwidth,
+                table/col sep=comma,
+                xlabel=Time,
+                ylabel=$\text{CO}_2$ (ppm),
+                mark size=1pt,
+                mark=o,
+                xmajorgrids=true,
+                minor x tick num=1,
+                xminorgrids=true,
+                enlargelimits=false,
+                x tick label style={/pgf/number format/.cd, set thousands separator={}},
+                title={\bfseries Constant Variance},
+            ]
+            \addplot+[red] table[mark=none,x=decimal date,y=average] {./data/co2_mm_mlo.csv};
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Examples of constant and non-constant variance}
+\end{figure}
+
+\subsection{Tools to diagnose the non-constant variance}
+
+\paragraph{Mean-Variance Plot} Calculate the mean and variance of consecutive
+groups of 8-12 observations. Plot the variance against the mean of each group.
+
+\begin{figure}[H]
+	\begin{tikzpicture}
+		\begin{axis}[
+				width=0.9\textwidth,
+				height=0.5\textwidth,
+				xlabel=Mean,
+				ylabel=Variance,
+				% ymajorgrids=true,
+				% yminorgrids=true,
+				% xmajorgrids=true,
+			]
+			\directlua{dofile("lua/variance-mean.lua")}
+		\end{axis}
+	\end{tikzpicture}
+	\caption{Mean-Variance plot of the \texttt{AirPassengers} series}
+\end{figure}
+
+\paragraph{Boxplot for periods} Represent the boxplot for each group of 8-12
+observations. The height of the box (IQR) is a robust estimate of variability.
+
+\begin{figure}[H]
+	\begin{tikzpicture}
+		\begin{axis}[
+				width=0.9\textwidth,
+				height=0.5\textwidth,
+				xlabel=Time,
+				ylabel=Passengers,
+				% ymajorgrids=true,
+				% yminorgrids=true,
+				% xmajorgrids=true,
+                boxplot/draw direction=y,
+                xtick={2,4,6,8,10,12},
+                xticklabels={1950,1952,1954,1956,1958,1960},
+                % boxplot/median/.style={line width=2pt},
+			]
+			\directlua{dofile("lua/boxplot.lua")}
+		\end{axis}
+	\end{tikzpicture}
+	\caption{Boxplot for periods of the \texttt{AirPassengers} series}
+\end{figure}
+
+\begin{itemize}
+    \item If the variance is similar for all the groups $\Longrightarrow$ No scale transformation.
+    \item If the variance is higher for higher values of the mean $\Longrightarrow$ Change the scale.
+\end{itemize}
+
+\subparagraph{Box-Cox transformation}
+\begin{equation}
+    Y_t = \begin{cases}
+        \frac{X_t^\lambda - 1}{\lambda} & \text{if } \lambda \neq 0 \\
+        \ln(X_t) & \text{if } \lambda = 0
+    \end{cases} \qquad \lambda \in [-1,\,2]
+\end{equation}
+\begin{marker}
+    Usually, the logarithmic transformation is used since it easier to interpret.
+\end{marker}
+

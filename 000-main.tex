@@ -5,7 +5,6 @@
 % PREAMBLE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \input{001-preamble}
-\synctex=1
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % EXTRA PACKAGES / CONFIG
@@ -19,6 +18,7 @@
 \g@addto@macro\@floatboxreset\centering
 \makeatother
 
+\usepackage{luacode}
 \usepackage{ulem}
 \usepackage{dsfont}
 \usepackage{tikz}
@@ -26,6 +26,7 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 \pgfmathsetseed{42} % Set seed for random number generation
+\usepgfplotslibrary{statistics}
 
 \tikzset{declare function = {
     binom(\k,\n,\p)=\n!/(\k!*(\n-\k)!)*\p^\k*(1-\p)^(\n-\k);
@@ -90,13 +91,26 @@
 {colback=red!5,colframe=red!55!black,fonttitle=\bfseries}{rec}
 
 \newtcbtheorem[number within=section]{exercise}{Exercise}%
-{colback=purple!5,colframe=purple!35!black,fonttitle=\bfseries}{rec}
+{colback=purple!5,colframe=purple!35!black,fonttitle=\bfseries}{ex}
 
 \newtcbtheorem[number within=section]{question}{Question}%
-{colback=purple!5,colframe=green!35!black,fonttitle=\bfseries}{rec}
+{colback=purple!5,colframe=green!35!black,fonttitle=\bfseries}{qu}
 
 \newtcbtheorem[number within=section]{example}{Example}%
-{colback=white,colframe=white!35!black,fonttitle=\bfseries,parbox=false}{ex}
+{colback=white,colframe=white!35!black,fonttitle=\bfseries,parbox=false}{example}
+
+\newtcolorbox{marker}[1][]{enhanced,
+  before skip balanced=2mm,after skip balanced=3mm,
+  boxrule=0.4pt,left=5mm,right=2mm,top=1mm,bottom=1mm,
+  colback=yellow!50,
+  colframe=yellow!20!black,
+  sharp corners,rounded corners=southeast,arc is angular,arc=3mm,
+  underlay={%
+    \path[fill=tcbcolback!80!black] ([yshift=3mm]interior.south east)--++(-0.4,-0.1)--++(0.1,-0.2);
+    \path[draw=tcbcolframe,shorten <=-0.05mm,shorten >=-0.05mm] ([yshift=3mm]interior.south east)--++(-0.4,-0.1)--++(0.1,-0.2);
+    \path[fill=yellow!50!black,draw=none] (interior.south west) rectangle node[white]{\Huge\bfseries !} ([xshift=4mm]interior.north west);
+    },
+  drop fuzzy shadow,#1}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % METADATA
