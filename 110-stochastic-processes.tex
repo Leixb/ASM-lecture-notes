@@ -141,14 +141,14 @@ We add the different components:\index{additive model}
 	\caption{Decomposition of the \texttt{AirPassengers} series from example~\ref{example:AirPassengers}}
 \end{figure}
 
-\subsubsection{Deterministic model}
+\subsubsection{Deterministic model}\index{deterministic model}
 The expected value of $X_t$ depends on a parametric function $F$ of $t$ and the random
 component does not depend on the previous values.
 \begin{equation}
 	X_t = F(t) + Z_t \qquad Z_t \sim N(0,\, \sigma_z^2) \tag{deterministic}
 \end{equation}
 
-\subsubsection{Stochastic model}
+\subsubsection{Stochastic model}\index{stochastic model}
 The expected value of $X_t$ depends on the previous values $X_{t-1}, X_{t-2}, \dots$ and/or
 the previous random components $Z_{t-1}, Z_{t-2}, \dots$ plus a random component independent
 of the past $Z_t$.
@@ -156,7 +156,7 @@ of the past $Z_t$.
 	X_t = G(X_{t-1}, X_{t-2}, \dots, Z_{t-1}, Z_{t-2}, \dots) + Z_t \qquad Z_t \sim N(0,\, \sigma_z^2) \tag{stochastic}
 \end{equation}
 
-\subsection{Box-Jenkins methodology}
+\subsection{Box-Jenkins methodology}\index{Box-Jenkins methodology}
 
 \begin{nscenter}
 	\begin{tikzpicture}[
@@ -208,9 +208,9 @@ Parameters of the model:
     \item $T(T-1)$ values for the covariances $Cov(X_t, X_s) = \sigma_{t,s}$
 \end{itemize}
 
-\subsection{Stationary Series}
+\subsection{Stationary Series}\index{stationary series}
 
-Strict Stationary Process or Series has the following properites:
+Strict Stationary Process or Series has the following properties:
 The joint distribution of the whole series does not depend on the time
 origin:
 \begin{equation}
@@ -239,7 +239,7 @@ Weakly Stationary process + Gaussian multivariate distribution $\Longrightarrow$
     \end{itemize}
 \end{question}
 
-\begin{marker}
+\begin{marker}\index{Non-constant variance}
     It is very common that the variance of the series increases when the level of the series rises.
 \end{marker}
 
@@ -348,3 +348,149 @@ observations. The height of the box (IQR) is a robust estimate of variability.
     Usually, the logarithmic transformation is used since it easier to interpret.
 \end{marker}
 
+\subsection{Seasonal difference}
+Tool to diagnose the seasonal pattern.
+
+\begin{minted}{R}
+monthplot(log(AirPassengers))
+\end{minted}
+
+\begin{figure}[H]
+	\begin{tikzpicture}
+		\begin{axis}[
+				width=0.9\textwidth,
+				height=0.5\textwidth,
+				xlabel=Month,
+				ylabel=Passengers (log),
+                xtick={1,2,3,4,5,6,7,8,9,10,11,12},
+                xticklabels={Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec},
+                ymode=log,
+			]
+			\directlua{dofile("lua/monthplot.lua")}
+		\end{axis}
+	\end{tikzpicture}
+	\caption{Month plot}
+\end{figure}
+
+\begin{minted}{R}
+ts.plot(matrix(log(AirPassengers),nrow=12),col=1:8)
+\end{minted}
+
+\begin{figure}[H]
+	\begin{tikzpicture}
+		\begin{axis}[
+				width=0.9\textwidth,
+				height=0.5\textwidth,
+				xlabel=Month,
+				ylabel=Passengers (log),
+                xtick={1,2,3,4,5,6,7,8,9,10,11,12},
+                xticklabels={Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec},
+                ymode=log,
+                cycle list name=exotic,
+			]
+			\directlua{dofile("lua/tsplot.lua")}
+		\end{axis}
+	\end{tikzpicture}
+	\caption{TS plot}
+\end{figure}
+
+\begin{definition}{Backshift operator}{backshift}
+    Same as the lag operator $L$ in some textbooks.
+    \begin{equation}
+        B^s X_t = X_{t-s} \qquad BX_t = X_{t-1}
+    \end{equation}
+\end{definition}
+
+\begin{definition}{Moving average of order $s$}{movingaverage}
+    \begin{equation}
+        W_t = \frac{1}{s} \sum_{i=1}^s X_{t-i+1} = (1 + B + \cdots + B^{s-1}) X_t
+    \end{equation}
+\end{definition}
+
+\begin{definition}{Seasonal difference of order $s$}{seasonaldifference}
+    \begin{equation}
+        W_t = X_t - X_{t-s} = (1 - B^s) X_t = \nabla_s X_t
+    \end{equation}
+    \tcblower
+    \begin{note}
+        The seasonal difference is the equivalent to a regular difference of a
+        moving average of order $s$:
+        \begin{equation}
+            (1 - B^s) = (1 - B) (1 + B + \cdots + B^{s-1})
+        \end{equation}
+    \end{note}
+\end{definition}
+
+\begin{figure}[H]
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.48\textwidth,
+                height=0.4\textwidth,
+                date coordinates in=x,
+                table/col sep=comma,
+                xlabel=Time,
+                ylabel=Passengers,
+                xticklabel=\year,
+                xtick distance=366*4,
+                xmajorgrids=true,
+                minor x tick num=1,
+                ymode=log,
+                xminorgrids=true,
+            ]
+            \addplot+[mark=none] table[x=Month,y=Passengers] {data/AirPassengers.csv};
+        \end{axis}
+    \end{tikzpicture}
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.47\textwidth,
+                height=0.4\textwidth,
+                table/col sep=comma,
+                xlabel=Time,
+                ylabel=d12 ln(Passengers),
+                % ymode=log,
+                xmajorgrids=true,
+                minor x tick num=1,
+                xminorgrids=true,
+                enlargelimits=false,
+                x tick label style={/pgf/number format/.cd, set thousands separator={}},
+            ]
+            \addplot+[mark=none,red] coordinates {
+                \directlua{dofile("lua/d12log.lua")}
+            };
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Seasonal difference of order 12}
+\end{figure}
+
+Is the mean constant?
+
+Linear of general trend implies non constant mean.
+
+\begin{recap}{}{}
+    \begin{tabular}{ll}
+        \toprule
+        Non-stationarity cause & Transformation \\ \midrule
+        Non-constant variance & Box-Cox \\
+        Linear Deterministic Trend & \multirow{2}{*}{Differencing} \\
+        Non-constant mean & \\
+        Deterministic $d$-th order polynomial trend & $d$-th order differencing \\
+        Stochastic trend & $d$-th order differencing until stationary \\
+        Seasonal pattern of order $s$ & Seasonal difference of order $s$ \\
+        Indexes and Financial data & Logarithmic transformation \\
+        \bottomrule
+    \end{tabular}
+\end{recap}
+
+\subsection{ACF and PACF}
+
+Moments of stationary processes
+
+\begin{tabular}{lcc}
+    \toprule
+    Moment & Theoretical & Sample \\ \midrule
+    Mean & $\mu$ & $\bar{X} = \frac{1}{T} \sum_{t=1}^T X_t$ \\
+    Autocovariance & $\gamma_k = \mathbb{E}[(X_t - \mu)(X_{t+k} - \mu)]$ & $\hat{\gamma}_k = \frac{1}{T} \sum_{t=1}^{T-k} (X_t - \bar{X})(X_{t+k} - \bar{X})$ \\
+    Variance & $\sigma^2$ & $S^2 = \frac{1}{T} \sum_{t=1}^T (X_t - \bar{X})^2$ \\
+    Autocorrelation & $\rho_k = \frac{\gamma_k}{\sigma^2}$ & $\hat{\rho}_k = \frac{\hat{\gamma}_k}{S^2}$ \\
+    \bottomrule
+\end{tabular}
