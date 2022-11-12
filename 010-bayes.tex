@@ -85,11 +85,12 @@ according to the target audience.
 	\begin{equation}
 		L_y(\theta) \propto p(y \mid \theta)
 	\end{equation}
-\end{definition}
 
+    \tcblower
 The likelihood function sorts the parameter space $\Omega$ from most likely to least,
 so if $L_y(\theta_1) > L_y(\theta_2)$ it means that according to the data $y$,
 the parameter $\theta_1$ is more likely than $\theta_2$.
+\end{definition}
 
 \begin{example}{Probability of head after 10 coin tosses}{}
 	\begin{alignat*}{1}
@@ -158,6 +159,8 @@ the parameter $\theta_1$ is more likely than $\theta_2$.
 		\pi(\theta \mid y) = \frac{p(y,\,\theta)}{p(y)} = \frac{p(y \mid \theta) \pi(\theta)}{p(y)}
 	\end{equation}
 
+    \tcblower
+
 	Where $p(y)$ is the \iemph{marginal distribution} of $\tilde{y}$ evaluated at the
 	data $y$, which we will also call the \iemph{prior predictive distribution} evaluated at
 	the data:
@@ -169,6 +172,8 @@ the parameter $\theta_1$ is more likely than $\theta_2$.
 		$p(y)$ is a constant, also called the \iemph{normalization constant}, which
 		makes the posterior distribution integrate to 1.
 	\end{note}
+
+    \tcbline
 
 	From this it follows that the posterior distribution is proportional to the
 	\emph{product} of the \emph{prior distribution} $\pi(\theta)$ and the
@@ -184,6 +189,8 @@ the parameter $\theta_1$ is more likely than $\theta_2$.
 \end{note}
 
 \begin{example}{Probability of head after 10 coin tosses $y=7$}{}
+
+    \tcbsubtitle{Informative prior}
 	We assume that the probability of head is close to 50\%, so we chose an
 	informative prior distribution:
 	\begin{alignat*}{1}
@@ -224,19 +231,18 @@ the parameter $\theta_1$ is more likely than $\theta_2$.
 			\end{axis}
 		\end{tikzpicture}
 	\end{nscenter}
-\end{example}
-
-\begin{example}{Probability of head after 10 coin tosses $y=7$ v2}{}
-	We take a less-informative prior distribution, since we are not sure that the coin
-	is fair:
+% \end{example}
+    \tcbsubtitle{With a less informative prior distribution}
+% \begin{example}{Probability of head after 10 coin tosses $y=7$ v2}{}
+	We now take a less-informative prior distribution, the posterior changes:
 	\begin{alignat*}{1}
-		\text{Statistical model:}      & \; \tilde y \mid \theta \sim \text{Binomial}(10, \theta), \; \theta \in [0,\,1] \\
+		% \text{Statistical model:}      & \; \tilde y \mid \theta \sim \text{Binomial}(10, \theta), \; \theta \in [0,\,1] \\
 		\text{Prior distribution:}     & \; \theta \sim \pi(\theta) = \text{Beta}(2,\,2)                                 \\
 		% \text{where:}             & \; \theta \text{ is the probability of head}                                    \\
-		\span \text{after 10 coin tosses, we observed 7 heads:} \; y = 7                                                 \\
+		% \span \text{after 10 coin tosses, we observed 7 heads:} \; y = 7                                                 \\
 		% \span \text{From $y$ we calculate likelihood and posterior:} \\
-		\text{Likelihood function:}    & \; L_y(\theta) \propto p(y \mid \theta) = \binom{10}{7} \theta^7 (1-\theta)^3
-		\propto \theta^7 (1-\theta)^3                                                                                    \\
+		% \text{Likelihood function:}    & \; L_y(\theta) \propto p(y \mid \theta) = \binom{10}{7} \theta^7 (1-\theta)^3
+		% \propto \theta^7 (1-\theta)^3                                                                                    \\
 		\text{Posterior distribution:} & \; \pi(\theta \mid y) = \text{Beta}(9,\,5)
 	\end{alignat*}
 	\vspace{-1em}
@@ -275,7 +281,7 @@ the parameter $\theta_1$ is more likely than $\theta_2$.
 \end{example}
 
 \begin{recap}{Posterior distribution}{}
-	\centering
+    \centering
 	\begin{tikzpicture}[every node/.style={rectangle,draw,fill=white}]
 		\node[align=center] (model) {%
 			Bayesian model\\[1em]
@@ -312,13 +318,15 @@ the parameter $\theta_1$ is more likely than $\theta_2$.
 		p(\tilde y) = \int_{\Omega} p(\tilde y ,\, \theta) \;d\theta = \int_{\Omega} p(\tilde y \mid \theta) \pi(\theta) \;d\theta
 	\end{equation}
 
-	\paragraph{Observations}
-	\begin{itemize}
-		\item $p(\tilde y) = E_{\pi(\theta)}[p(\tilde y \mid \theta)]$ is a weighted average of the
-		      probability models of $M$ where the weights are determined by the prior distribution $\pi(\theta)$.
-		\item $p(\tilde y)$ is a probability distribution that allows us to make predictions before
-		      observing the data.
-	\end{itemize}
+    \tcblower
+    \begin{note}
+        \begin{itemize}
+            \item $p(\tilde y) = E_{\pi(\theta)}[p(\tilde y \mid \theta)]$ is a weighted average of the
+                  probability models of $M$ where the weights are determined by the prior distribution $\pi(\theta)$.
+            \item $p(\tilde y)$ is a probability distribution that allows us to make predictions before
+                  observing the data.
+        \end{itemize}
+    \end{note}
 \end{definition}
 
 If we know something about the parameters, it means that we have some prior information about the data
@@ -340,11 +348,13 @@ The prior's parameters can be chosen in two ways:
 		p(\tilde y \mid y) = \int_{\Omega} p(\tilde y \mid \theta) \pi(\theta \mid y) \;d\theta
 	\end{equation}
 
-	\paragraph{Observations}
-	\begin{itemize}
-		\item $\pi(\theta y \mid y)$ shows everything we know about the parameter.
-		\item $p(\tilde y \mid y)$ shows everything we know about the data behavior.
-	\end{itemize}
+    \tcblower
+    \begin{note}
+        \begin{itemize}
+            \item $\pi(\theta y \mid y)$ shows everything we know about the parameter.
+            \item $p(\tilde y \mid y)$ shows everything we know about the data behavior.
+        \end{itemize}
+    \end{note}
 \end{definition}
 
 Predictive distributions can be calculated in two ways:

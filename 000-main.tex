@@ -65,8 +65,8 @@
 \usepackage{tcolorbox}
 \tcbuselibrary{most}
 
-\theoremstyle{plain}% from `amsthm'
-\newtheorem{lemma}{Lemma}% from `amsthm'
+% \theoremstyle{plain}% from `amsthm'
+% \newtheorem{lemma}{Lemma}% from `amsthm'
 % \newtheorem{prop}{Proposition}% from `amsthm'
 
 \theoremstyle{definition}% from `amsthm'
@@ -77,43 +77,100 @@
 \newtheorem{ex}{Example}% from `amsthm'
 \newtheorem{prob}{Problem}% from `amsthm'
 \newtheorem{ques}{Question}% from `amsthm'
-\newtheorem*{note}{Note}% from `amsthm'
+% \newtheorem*{note}{Note}% from `amsthm'
 \newtheorem*{hint}{Hint}% from `amsthm'
 
-\newtcbtheorem[number within=section]{definition}{Definition}%
-{colback=orange!5,colframe=yellow!35!black,fonttitle=\bfseries,parbox=false}{def}
+% \newtcbtheorem[number within=section]{definition}{Definition}%
+% {colback=orange!5,colframe=yellow!35!black,fonttitle=\bfseries,parbox=false}{def}
 
-\newtcbtheorem[number within=section]{theorem}{Theorem}%
-{colback=yellow!5,colframe=lime!35!black,fonttitle=\bfseries,parbox=false}{th}
+% \newtcbtheorem[number within=section]{theorem}{Theorem}%
+% {colback=yellow!5,colframe=lime!35!black,fonttitle=\bfseries,parbox=false}{th}
 
-\newtcbtheorem[number within=section]{prop}{Proposition}%
-{colback=cyan!5,colframe=cyan!35!black,fonttitle=\bfseries}{prop}
+% \newtcbtheorem[number within=section]{prop}{Proposition}%
+% {colback=cyan!5,colframe=cyan!35!black,fonttitle=\bfseries}{prop}
 
-\newtcbtheorem[number within=section]{recap}{Recap}%
-{colback=red!5,colframe=red!55!black,fonttitle=\bfseries}{rec}
+% \newtcbtheorem[number within=section]{recap}{Recap}%
+% {colback=red!5,colframe=red!55!black,fonttitle=\bfseries}{rec}
 
-\newtcbtheorem[number within=section]{exercise}{Exercise}%
-{colback=purple!5,colframe=purple!35!black,fonttitle=\bfseries}{ex}
+% \newtcbtheorem[number within=section]{exercise}{Exercise}%
+% {colback=purple!5,colframe=purple!35!black,fonttitle=\bfseries}{ex}
 
-\newtcbtheorem[number within=section]{question}{Question}%
-{colback=purple!5,colframe=green!35!black,fonttitle=\bfseries}{qu}
+% \newtcbtheorem[number within=section]{question}{Question}%
+% {colback=purple!5,colframe=green!35!black,fonttitle=\bfseries}{qu}
 
-\newtcbtheorem[number within=section]{example}{Example}%
-{colback=white,colframe=white!35!black,fonttitle=\bfseries,parbox=false}{example}
+% \newtcbtheorem[number within=section]{example}{Example}%
+% {colback=white,colframe=white!35!black,fonttitle=\bfseries,parbox=false}{example}
 
-\newtcolorbox{marker}[1][]{enhanced,
-  before skip balanced=2mm,after skip balanced=3mm,
-  boxrule=0.4pt,left=5mm,right=2mm,top=1mm,bottom=1mm,
-  colback=yellow!50,
-  colframe=yellow!20!black,
-  sharp corners,rounded corners=southeast,arc is angular,arc=3mm,
-  underlay={%
-    \path[fill=tcbcolback!80!black] ([yshift=3mm]interior.south east)--++(-0.4,-0.1)--++(0.1,-0.2);
-    \path[draw=tcbcolframe,shorten <=-0.05mm,shorten >=-0.05mm] ([yshift=3mm]interior.south east)--++(-0.4,-0.1)--++(0.1,-0.2);
-    \path[fill=yellow!50!black,draw=none] (interior.south west) rectangle node[white]{\Huge\bfseries !} ([xshift=4mm]interior.north west);
+% \newtcolorbox{marker}[1][]{enhanced,
+%   before skip balanced=2mm,after skip balanced=3mm,
+%   boxrule=0.4pt,left=5mm,right=2mm,top=1mm,bottom=1mm,
+%   colback=yellow!50,
+%   colframe=yellow!20!black,
+%   sharp corners,rounded corners=southeast,arc is angular,arc=3mm,
+%   underlay={%
+%     \path[fill=tcbcolback!80!black] ([yshift=3mm]interior.south east)--++(-0.4,-0.1)--++(0.1,-0.2);
+%     \path[draw=tcbcolframe,shorten <=-0.05mm,shorten >=-0.05mm] ([yshift=3mm]interior.south east)--++(-0.4,-0.1)--++(0.1,-0.2);
+%     \path[fill=yellow!50!black,draw=none] (interior.south west) rectangle node[white]{\Huge\bfseries !} ([xshift=4mm]interior.north west);
+%     },
+%   drop fuzzy shadow,#1}
+
+\tcbset{%
+    theo/.style={%
+        enhanced,
+        skin=bicolor,
+        colbacklower=#1!2,
+        sharp corners,
+        toprule=0pt, rightrule=0pt, bottomrule=0pt, leftrule=1mm,
+        colback=#1!5, colframe=#1!80!black, coltitle=#1!80!black,
+        fonttitle=\bfseries,
+        detach title, before upper={\tcbtitle\par},
+        subtitle style={fontupper=\bfseries,toprule=0pt,bottomrule=0pt,colback={#1!10}},
+        parbox=false,
     },
-  drop fuzzy shadow,#1}
+    marker/.style={%
+      enhanced,
+      before skip balanced=2mm,after skip balanced=3mm,
+      boxrule=0.4pt,left=5mm,right=2mm,top=1mm,bottom=1mm,
+      colback=#1!50,
+      colframe=#1!20!black,
+      sharp corners,rounded corners=southeast,arc is angular,arc=3mm,
+      underlay={%
+        \path[fill=tcbcolback!80!black] ([yshift=3mm]interior.south east)--++(-0.4,-0.1)--++(0.1,-0.2);
+        \path[draw=tcbcolframe,shorten <=-0.05mm,shorten >=-0.05mm] ([yshift=3mm]interior.south east)--++(-0.4,-0.1)--++(0.1,-0.2);
+        \path[fill=#1!50!black,draw=none] (interior.south west) rectangle node[white]{\Huge\bfseries !} ([xshift=4mm]interior.north west);
+        },
+      % drop fuzzy shadow,
+  },
+}
 
+\newtcbtheorem[number within=chapter]{definition}{Definition}%
+{theo=blue}{def}
+
+\newtcbtheorem[number within=chapter]{theorem}{Theorem}%
+{theo=purple}{th}
+
+\newtcbtheorem[number within=chapter]{prop}{Proposition}%
+{theo=red}{prop}
+
+\newtcbtheorem[number within=chapter]{lemma}{Lemma}%
+{theo=magenta}{lemma}
+
+\newtcbtheorem[number within=chapter]{recap}{Recap}%
+{theo=orange}{rec}
+
+\newtcbtheorem[number within=chapter]{exercise}{Exercise}%
+{theo=yellow,coltitle=black}{exer}
+
+\newtcbtheorem[number within=chapter]{question}{Question}%
+{theo={green!50!black}}{qu}
+
+\newtcbtheorem[number within=chapter]{example}{Example}%
+{theo=black,colback=white}{example}
+
+\newtcolorbox{marker}[1][]{marker=yellow,#1}
+\newtcolorbox{important}[1][]{marker=red,#1}
+\newtcolorbox{cnote}[1][]{marker=orange,#1}
+\newtcolorbox{note}[1][]{marker=white,#1}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % METADATA
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -78,7 +78,7 @@ for i = 1, #passengers do
     tex.print("    (" .. months[i] .. ", " .. seasonal[j] .. ")")
 end
 tex.print("};")
-tex.print("\\addplot[mark=none, color=green] coordinates {")
+tex.print("\\addplot[mark=none, color={green!70!black}] coordinates {")
 for i = 1, #residual do
     tex.print("    (" .. months[i+s/2] .. ", " .. fit[i] .. ")")
 end
