@@ -214,7 +214,7 @@ Strict Stationary Process or Series has the following properties:
 The joint distribution of the whole series does not depend on the time
 origin:
 \begin{equation}
-    F_{X_1, \dots, X_t}(x_1, \dots, x_t) = F_{X_{1+s}, \dots, X_{t+s}}(x_{1+s}, \dots x_{t+s}) \forall t,s
+    F_{X_1, \dots, X_t}(x_1, \dots, x_t) = F_{X_{1+s}, \dots, X_{t+s}}(x_{1+s}, \dots x_{t+s}) \quad \forall\; t,s
 \end{equation}
 
 \subsection{Weakly Stationary process}
@@ -286,6 +286,7 @@ Weakly Stationary process + Gaussian multivariate distribution $\Longrightarrow$
     \caption{Examples of constant and non-constant variance}
 \end{figure}
 
+\pagebreak
 \subsection{Tools to diagnose the non-constant variance}
 
 \paragraph{Mean-Variance Plot} Calculate the mean and variance of consecutive
@@ -338,6 +339,8 @@ observations. The height of the box (IQR) is a robust estimate of variability.
 \end{itemize}
 
 \subparagraph{Box-Cox transformation}
+Once we have identified a non-constant variance, we apply a scale
+transformation to make it constant. For this, we use the Box-Cox:
 \begin{equation}
     Y_t = \begin{cases}
         \frac{X_t^\lambda - 1}{\lambda} & \text{if } \lambda \neq 0 \\
@@ -349,17 +352,19 @@ observations. The height of the box (IQR) is a robust estimate of variability.
 \end{marker}
 
 \subsection{Seasonal difference}
-Tool to diagnose the seasonal pattern.
+To diagnose the seasonal pattern, we can use \mintinline{R}{monthplot}
+from the \mintinline{R}{forecast} package. Or we can use the \mintinline{R}{ts.plot}. Below we show examples of its usage and their input (recreated in pgfplots with lua)
 
 \begin{minted}{R}
 monthplot(log(AirPassengers))
+ts.plot(matrix(log(AirPassengers),nrow=12),col=1:8)
 \end{minted}
 
 \begin{figure}[H]
 	\begin{tikzpicture}
 		\begin{axis}[
 				width=0.9\textwidth,
-				height=0.5\textwidth,
+				height=0.3\textwidth,
 				xlabel=Month,
 				ylabel=Passengers (log),
                 xtick={1,2,3,4,5,6,7,8,9,10,11,12},
@@ -369,18 +374,10 @@ monthplot(log(AirPassengers))
 			\directlua{dofile("lua/monthplot.lua")}
 		\end{axis}
 	\end{tikzpicture}
-	\caption{Month plot}
-\end{figure}
-
-\begin{minted}{R}
-ts.plot(matrix(log(AirPassengers),nrow=12),col=1:8)
-\end{minted}
-
-\begin{figure}[H]
 	\begin{tikzpicture}
 		\begin{axis}[
 				width=0.9\textwidth,
-				height=0.5\textwidth,
+				height=0.3\textwidth,
 				xlabel=Month,
 				ylabel=Passengers (log),
                 xtick={1,2,3,4,5,6,7,8,9,10,11,12},
@@ -391,7 +388,7 @@ ts.plot(matrix(log(AirPassengers),nrow=12),col=1:8)
 			\directlua{dofile("lua/tsplot.lua")}
 		\end{axis}
 	\end{tikzpicture}
-	\caption{TS plot}
+	\caption{monthplot (top) and ts.plot (bottom) of the \texttt{AirPassengers} series}
 \end{figure}
 
 \begin{definition}{Backshift operator}{backshift}
