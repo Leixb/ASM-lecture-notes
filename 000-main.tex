@@ -30,6 +30,9 @@
 \pgfmathsetseed{42} % Set seed for random number generation
 \usepgfplotslibrary{statistics}
 
+\usetikzlibrary{arrows.meta}
+\tikzset{>={Latex[width=3mm,length=3mm]}}
+
 \tikzset{declare function = {
     binom(\k,\n,\p)=\n!/(\k!*(\n-\k)!)*\p^\k*(1-\p)^(\n-\k);
     normal(\x,\mu,\sigma)=\frac{1}{\sqrt{2*\pi*\sigma^2}}*\exp(-\frac{(\x-\mu)^2}{2*\sigma^2});
@@ -129,6 +132,7 @@
     },
     marker/.style={%
       enhanced,
+      parbox=false,
       before skip balanced=2mm,after skip balanced=3mm,
       boxrule=0.4pt,left=5mm,right=2mm,top=1mm,bottom=1mm,
       colback=#1!50,
@@ -167,9 +171,9 @@
 \newtcbtheorem[number within=chapter]{example}{Example}%
 {theo=black,colback=white}{example}
 
-\newtcolorbox{marker}[1][]{marker=yellow,#1}
-\newtcolorbox{important}[1][]{marker=red,#1}
-\newtcolorbox{cnote}[1][]{marker=orange,#1}
+\newtcolorbox{marker}[1][]{marker={yellow!50!white},#1}
+\newtcolorbox{important}[1][]{marker=orange,#1}
+\newtcolorbox{cnote}[1][]{marker=yellow,#1}
 \newtcolorbox{note}[1][]{marker=white,#1}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % METADATA
@@ -229,6 +233,7 @@
 
 % Time series
 \include{110-stochastic-processes}
+\include{120-arma}
 
 % \nocite{*}
 
