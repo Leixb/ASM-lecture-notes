@@ -49,7 +49,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \usepackage{color}     % more colors
-\usepackage[dvipsnames]{xcolor}     % more colors
+\usepackage[dvipsnames]{xcolor}
+
 
 \usepackage{graphicx}   % graphics
 \graphicspath{{./figures/}}
@@ -200,9 +201,37 @@
 %% MISC
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\directlua{require('lua/hyphenate_all')}
-
 %\usepackage{datetime} % Customize date
 %% \monthyeardate\today gives the date without the day
 %\newdateformat{monthyeardate}{%
     %\monthname[\THEMONTH], \THEYEAR}
+
+% Set default figure size
+\setkeys{Gin}{width=.9\textwidth, keepaspectratio}
+
+\usepackage{fancyhdr}
+\usepackage{relsize}
+
+% Center figures by default
+\makeatletter
+\g@addto@macro\@floatboxreset\centering
+\makeatother
+
+\usepackage[normalem]{ulem}
+\usepackage{dsfont}
+\usepackage{tikz}
+% \usepackage{tikzexternal}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\usetikzlibrary{shapes,arrows,positioning,calc}
+\usetikzlibrary{arrows.meta}
+\tikzset{>={Latex[width=3mm,length=3mm]}}
+
+\usepackage{cancel}
+\usepackage{mathrsfs}
+
+\DeclareMathOperator{\argmin}{argmin}
+\DeclareMathOperator{\argmax}{argmax}
+
+\directlua{require("lua/hyphenate_all")}
