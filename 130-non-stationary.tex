@@ -1,0 +1,231 @@
+%! TEX root = **/000-main.tex
+\section{Non-stationary processes}
+% 2022-11-22
+
+\begin{align*}
+	MA(1) & = \theta_1 Z_{t-1} + Z_t
+\end{align*}
+
+\begin{align*}
+	MA(1)              & \,\text{invertible}                     \\
+	                   & \Updownarrow                            \\
+	1 + \theta_1 B = 0 & \implies |B| = |\frac{1}{\theta_1}| > 1 \\
+	\span\boxed{|\theta_1| < 1}
+\end{align*}
+
+\begin{align*}
+	AR(1) & : (1 -\phi_1 B) X_t = Z_t
+\end{align*}
+
+\begin{align*}
+	AR(1) & \,\text{causal}                              \\
+	      & \Updownarrow                                 \\
+	1 - \phi B = 0 \implies |B| = |\frac{1}{\phi_1}| < 1 \\
+	\boxed{|\phi_1| < 1}
+\end{align*}
+
+ARMA(2,2):
+
+\begin{align*}
+	\underbrace{(1 + \phi_1B + \phi_2B^2)}_{AR(2)}
+	X_t
+	=
+	\underbrace{(1 + \theta_1B + \theta_2B^2)}_{MA(2)}
+	Z_t \\
+	B = \frac{
+		-\theta_1 \pm \sqrt{\theta_1^2 - 4\theta_2}
+	}{
+		2\theta_2
+	}
+\end{align*}
+
+\begin{note}
+	In general if the degree is greater than 2 we
+	can only solve it with computer.
+\end{note}
+
+\begin{note}
+	$AR(p)$ is always invertible.
+\end{note}
+
+\begin{note}
+	\begin{align*}
+		MA(q) \implies X_t = \Theta_q(B) Z_t
+	\end{align*}
+	All $MA(q)$ models are causal.
+\end{note}
+
+\begin{example}{}{}
+	\begin{align*}
+		X_t                   & = 1.5 + 0.36X_{t-2} + Z_t \tag{AR(2)} \\
+		(1 - 0.36B^2) X_t = 1.5 + Z_t                                 \\
+		A(\infty) \begin{cases}
+			          \pi_1 & = 0                    \\
+			          \pi_2 & = -0.36                \\
+			          \pi_k & = 0 \text{ for } k > 2
+		          \end{cases}                      \\[2em]
+		1 - 0.36B^2 = 0       & \rightarrow{} B = \pm \sqrt{1}{0.36}
+		= \pm \frac{5}{3}                                             \\
+		|B| = \frac{5}{3} > 1 & \implies{} \text{CAUSAL}
+	\end{align*}
+
+	\tcbline
+
+	\begin{align*}
+		X_t - X_{t-1} + X_{t-2} & = Z_t - Z_{t-2} \tag{ARMA(2,1)}               \\
+		(1 - B + B^2) X_t       & = (1 - B^2) Z_t                               \\
+		1 - B + B^2 = 0         & \rightarrow{} B = \frac{-1\pm\sqrt{1 - 4}}{2}
+		= 1/2 \pm \frac{\sqrt{3}}{2}i                                           \\
+		|B| = \sqrt{\left(\frac{1}{2}\right)^2 + \left(\frac{\sqrt{3}}{2}\right)^2}
+		= 1                                                                     \\
+	\end{align*}
+
+	Since they both have $|B| = 1$ non of them are
+	invertible (they must be strictly greater than 1).
+
+	\begin{figure}[H]
+		\begin{tikzpicture}
+			\begin{axis}[
+					axis lines=middle,
+					xmin=-1.5, xmax=1.5,
+					ymin=-1.5, ymax=1.5,
+					% fixed aspect ratio
+					axis equal image,
+				]
+				% unit circle
+				\addplot[domain=0:360, samples=60, smooth, color=black, dashed]
+				({cos(x)}, {sin(x)});
+
+				\draw[blue] (0, 0) -- (0.5, 0.866025);
+				\draw[blue] (0, 0) -- (0.5, -0.866025);
+				\addplot[blue,mark=*,only marks, point meta=explicit symbolic,
+					nodes near coords,
+				] coordinates {
+						(0.5, 0.866025)[$\left(\frac{1}{2},\, \frac{\sqrt{3}}{2} \right)$]
+						(0.5, -0.866025)[$\left(\frac{1}{2},\, -\frac{\sqrt{3}}{2} \right)$]
+					};
+			\end{axis}
+		\end{tikzpicture}
+	\end{figure}
+
+\end{example}
+
+\subsection{Causality}
+
+A time series $X_t$ that has a unit root $(1 - B)^d$
+\begin{align*}
+	X_t \sim \underbrace{I(d)}_{Integrated} \iff (1 - B)^d X_t
+	\tag{Stationary (Casual)}
+\end{align*}
+
+From this we devise the AR\textbf{I}MA(p,d,q) model:
+
+\begin{definition}{AutoRegressive Integrated Moving Average (ARIMA)}{}
+	\begin{equation*}
+		\text{ARIMA}(p,\,d,\,q) \longrightarrow{} \underbrace{\Phi_p(B)}_{AR(p)}
+		\underbrace{(1-B)^d}_{I(d)}
+		X_t =
+		\underbrace{\Theta_q(B)}_{MA(q)}
+		Z_t
+		% \tag{ARIMA}
+	\end{equation*}
+\end{definition}
+
+\subsection{Identification}
+
+We transform $X_t \longrightarrow{} W_t$ stationary.
+From this we get the value of $d$. Which is the
+number of regular differences we have applied to obtain
+stationarity.
+
+Sample ACF/PACF from $W_t \implies \text{ARMA}(p,\,q)$.
+
+\begin{definition}{Random Walk}{}
+
+	$\text{ARIMA}(0,\,1,\,0)$, it is just the previous
+	value plus a random error.
+
+	\begin{figure}[H]
+		\begin{tikzpicture}
+			\begin{axis}
+				\addplot[mark=none] coordinates{
+						\directlua{
+							v = 0
+							for i = 1, 300 do
+							v = v + math.random()*10 - 5
+							tex.print("(" .. i .. ", " .. v .. ")")
+							end
+						}
+					};
+			\end{axis}
+		\end{tikzpicture}
+	\end{figure}
+
+\end{definition}
+
+\section{SARIMA}
+
+We combine the regular and seasonal dependence into the model,
+from that we obtain the SARIMA model.
+
+\begin{definition}{Regular dependence}{}
+	How $X_t$ depends on $X_{t-1}$, $X_{t-2}$, etc.
+\end{definition}
+
+\begin{definition}{Seasonal dependence}{}
+	How $X_t$ depends on $X_{t-s}$, $X_{t-2s}$, etc.
+
+	Present when we have a seasonal pattern.
+\end{definition}
+
+\begin{definition}{Seasonal ARIMA (SARIMA)}{}
+	\begin{align*}
+		\text{SARIMA}
+		\underbrace{(p,\,d,\,q)}_{\text{Regular}}
+		\underbrace{\left(P,D,Q\right)_s}_{\text{Seasonal}} \\
+		%
+		\downarrow                                          \\
+		%
+		\underbrace{\phi_p(B)}_{AR(p)}
+		\overbrace{\Phi_P(B^s)}^{AR(P)_s}
+		\underbrace{(1-B)^d}_{I(d)}
+		\overbrace{(1-B^s)^D}^{I(D)_s}
+		X_t =
+		\underbrace{\theta_q(B)}_{MA(q)}
+		\overbrace{\Theta_Q(B^s)}^{MA(Q)_s}
+		Z_t
+	\end{align*}
+\end{definition}
+
+
+\subsection{Identification}
+
+\begin{figure}[H]
+	\begin{tikzpicture}[
+			every node/.style={rectangle},
+			node distance=2cm,
+		]
+		\node (start) {$X_t$};
+		\node[below right of=start] (log) {$\log X_t$};
+		\node[below of=log] (sdiff) {$(1-B^s)X_t$};
+		\node[below of=sdiff] (diff) {$(1-B)X_t\;$};
+        \node[right=of diff,align=left] (leg_diff) {$d$ = number of\\ regular differences};
+		\coordinate[below left of=diff] (end_prev);
+        \node[below of=end_prev,node distance=0.5cm] (end) {$W_t$};
+
+		\draw[->] ($(start |- log.north) + (0, 5mm)$) -| (log.north);
+		\draw[->] (log.south) |- ($(start |- log.south) + (0, -3mm)$);
+
+		\draw[->] ($(start |- sdiff.north) + (0, 5mm)$) -| (sdiff.north);
+		\draw[->] (sdiff.south) |- ($(start |- sdiff.south) + (0, -3mm)$);
+
+		\draw[->] ($(start |- diff.north) + (0, 5mm)$) -| (diff.north);
+		\draw[->] (diff.south) |- ($(start |- diff.south) + (0, -3mm)$);
+
+		\draw[->] (start) -- (end);
+	\end{tikzpicture}
+\end{figure}
+
+\begin{example}{SARIMA}{}
+
+\end{example}
